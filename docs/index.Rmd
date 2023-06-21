@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 # **1. Table of Contents**
 |
@@ -623,11 +623,86 @@ if (DPA_HighlyCorrelatedCount > 0) {
 
 ###  1.3.4 Linear Dependencies
 |
+| Linear dependency data assessment:
+|
+| **[A]** No linear dependencies noted for any subset of variables using the preprocessing summary from the <mark style="background-color: #CCECFF">**caret**</mark> package applying the <span style="color: #0000FF">findLinearCombos</span> method which utilizes the QR decomposition of a matrix to enumerate sets of linear combinations (if they exist). 
+|
 |
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.3.4, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DPA <- peakVO2
+
+##################################
+# Listing all predictors
+##################################
+DPA.Predictors <- DPA[,!names(DPA) %in% c("died","ttodead")]
+
+##################################
+# Listing all numeric predictors
+##################################
+DPA.Predictors.Numeric <- DPA.Predictors[,sapply(DPA.Predictors, is.numeric)]
+
+##################################
+# Identifying the linearly dependent variables
+##################################
+DPA_LinearlyDependent <- findLinearCombos(DPA.Predictors.Numeric)
+
+(DPA_LinearlyDependentCount <- length(DPA_LinearlyDependent$linearCombos))
+
+if (DPA_LinearlyDependentCount == 0) {
+  print("No linearly dependent predictors noted.")
+} else {
+  print(paste0("Linear dependency observed for ",
+               (DPA_LinearlyDependentCount),
+               " subset(s) of numeric variable(s)."))
+  
+  for (i in 1:DPA_LinearlyDependentCount) {
+    DPA_LinearlyDependentSubset <- colnames(DPA.Predictors.Numeric)[DPA_LinearlyDependent$linearCombos[[i]]]
+    print(paste0("Linear dependent variable(s) for subset ",
+                 i,
+                 " include: ",
+                 DPA_LinearlyDependentSubset))
+  }
+  
+}
+
+##################################
+# Identifying the linearly dependent variables for removal
+##################################
+
+if (DPA_LinearlyDependentCount > 0) {
+  DPA_LinearlyDependent <- findLinearCombos(DPA.Predictors.Numeric)
+  
+  DPA_LinearlyDependentForRemoval <- length(DPA_LinearlyDependent$remove)
+  
+  print(paste0("Linear dependency can be resolved by removing ",
+               (DPA_LinearlyDependentForRemoval),
+               " numeric variable(s)."))
+  
+  for (j in 1:DPA_LinearlyDependentForRemoval) {
+  DPA_LinearlyDependentRemovedVariable <- colnames(DPA.Predictors.Numeric)[DPA_LinearlyDependent$remove[j]]
+  print(paste0("Variable ",
+               j,
+               " for removal: ",
+               DPA_LinearlyDependentRemovedVariable))
+  }
+  
+  ##################################
+  # Filtering out columns with linear dependency
+  #################################
+  DPA_ExcludedLinearlyDependent <- DPA[,-DPA_LinearlyDependent$remove]
+  
+  ##################################
+  # Gathering descriptive statistics
+  ##################################
+  (DPA_ExcludedLinearlyDependent_Skimmed <- skim(DPA_ExcludedLinearlyDependent))
+
+}
 
 ```
 
@@ -635,11 +710,48 @@ if (DPA_HighlyCorrelatedCount > 0) {
 
 ###  1.3.5 Pre-Processed Dataset
 |
+| Preliminary dataset assessment:
+|
+| **[A]** 2231 rows (observations)
+| 
+| **[B]** 39 columns (variables)
+|      **[B.1]** 1/39 survival event status = <span style="color: #FF0000">died</span> variable (factor)
+|             **[B.1.1]** Event = <span style="color: #FF0000">died=1</span> 
+|             **[B.1.2]** Censored or Non-Event = <span style="color: #FF0000">died=0</span>
+|      **[B.2]** 1/39 survival time = <span style="color: #FF0000">ttodead</span> variable (numeric)
+|      **[B.3]** 37/39 predictors = All remaining variables (24/39 factor + 13/39 numeric)
+|
+| **[C]** Pre-processing actions applied:
+|      **[C.1]** No centering, scaling and shape transformation applied to maintain interpretability
+|      **[C.2]** No outlier treatment applied since the high values noted were contextually valid and sensible 
+|      **[C.3]** 2 predictors removed due to zero or near-zero variance 
+|      **[C.4]** No predictors removed due to high correlation
+|      **[C.5]** No predictors removed due to linear dependencies
+|
 |
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.3.5, warning=FALSE, message=FALSE}
+##################################
+# Filtering out columns noted with data quality issues including
+# zero and near-zero variance,
+# to create the pre-modelling dataset
+##################################
+PMA_ExcludedLowVariance <- peakVO2[,!names(peakVO2) %in% c("dilver","nifed")]
+
+PMA_PreModelling_Train <- PMA_ExcludedLowVariance
+
+##################################
+# Gathering descriptive statistics
+##################################
+(PMA_PreModelling_Train_Skimmed <- skim(PMA_PreModelling_Train))
+
+###################################
+# Verifying the data dimensions
+# for the train set
+###################################
+dim(PMA_PreModelling_Train)
 
 ```
 
@@ -647,11 +759,463 @@ if (DPA_HighlyCorrelatedCount > 0) {
 
 ## 1.4 Data Exploration
 |
+| Exploratory data analysis:
+|
+| **[A]** Numeric variables which demonstrated differential relationships with the <span style="color: #FF0000">ttodead</span> and <span style="color: #FF0000">died</span> survival time and event status variables, based on trend line correlation with survival time, include:
+|      **[A.1]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[A.2]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[A.3]** <span style="color: #FF0000">sodium</span> variable (numeric)
+|
+| **[B]** Factor variables which demonstrated differential relationships with the <span style="color: #FF0000">ttodead</span> and <span style="color: #FF0000">died</span> survival time and event status variables, based on the Log-Rank Test p-value and estimated Kaplan-Meier survival curve separations, include:
+|      **[B.1]** <span style="color: #FF0000">betablk</span> variable (factor)
+|      **[B.2]** <span style="color: #FF0000">diuretic.thiazide</span> variable (factor)
+|      **[B.3]** <span style="color: #FF0000">digoxin</span> variable (factor)
+|      **[B.4]** <span style="color: #FF0000">cad</span> variable (factor)
+|      **[B.5]** <span style="color: #FF0000">diuretic.loop</span> variable (factor)
+|      **[B.6]** <span style="color: #FF0000">male</span> variable (factor)
+|      **[B.7]** <span style="color: #FF0000">surgery.cabg</span> variable (factor)
+|      **[B.8]** <span style="color: #FF0000">insulin</span> variable (factor)
+|
 |
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.4, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+EDA <- PMA_PreModelling_Train
+
+##################################
+# Loading dataset
+##################################
+EDA.DescriptiveStatistics <- EDA
+
+EDA.DescriptiveStatistics$died <- ifelse(EDA.DescriptiveStatistics$died=="0","Survived+Censored","Died")
+
+##################################
+# Formulating a preliminary summary
+# of descriptive statistics 
+##################################
+EDA.DescriptiveStatistics %>%
+  tbl_summary(
+    by = died,
+    type = all_continuous() ~ "continuous2",
+    statistic = all_continuous() ~ c("{N_nonmiss}",
+                                     "{mean} ({sd})", 
+                                     "{median} ({p25}, {p75})", 
+                                     "{min}, {max}"),
+    missing = "no") %>% 
+  add_overall() %>% 
+  add_p()
+
+##################################
+# Listing all predictors
+##################################
+EDA.Predictors <- EDA[,!names(EDA) %in% c("died","ttodead")]
+
+##################################
+# Listing all numeric predictors
+##################################
+EDA.Predictors.Numeric <- EDA.Predictors[,sapply(EDA.Predictors, is.numeric)]
+ncol(EDA.Predictors.Numeric)
+names(EDA.Predictors.Numeric)
+
+##################################
+# Listing all factor predictors
+##################################
+EDA.Predictors.Factor <- EDA.Predictors[,sapply(EDA.Predictors, is.factor)]
+ncol(EDA.Predictors.Factor)
+names(EDA.Predictors.Factor)
+
+##################################
+# Formulating the box plots
+##################################
+featurePlot(x = EDA.Predictors.Numeric, 
+            y = EDA$died,
+            plot = "box",
+            scales = list(x = list(relation="free", rot = 90), 
+                          y = list(relation="free")),
+            adjust = 1.5, 
+            pch = "|")
+
+##################################
+# Formulating the scatter plot
+##################################
+featurePlot(x = EDA.Predictors.Numeric, 
+            y = EDA$ttodead,
+            plot = "scatter",
+            type = c("p", "smooth"),
+            span = .5)
+
+##################################
+# Restructuring the dataset for
+# for barchart analysis
+##################################
+died <- EDA$died
+EDA.Bar.Source <- as.data.frame(cbind(died,
+                     EDA.Predictors.Factor))
+ncol(EDA.Bar.Source)
+names(EDA.Bar.Source)
+
+
+##################################
+# Creating a function to formulate
+# the proportions table
+##################################
+EDA.PropTable.Function <- function(FactorVar) {
+  EDA.Bar.Source.FactorVar <- EDA.Bar.Source[,c("died",
+                                          FactorVar)]
+  EDA.Bar.Source.FactorVar.Prop <- as.data.frame(prop.table(table(EDA.Bar.Source.FactorVar), 2))
+  names(EDA.Bar.Source.FactorVar.Prop)[2] <- "Structure"
+  EDA.Bar.Source.FactorVar.Prop$Variable <- rep(FactorVar,nrow(EDA.Bar.Source.FactorVar.Prop))
+
+  return(EDA.Bar.Source.FactorVar.Prop)
+
+}
+
+
+EDA.Bar.Source.FactorVar.Prop.Group <- rbind(EDA.PropTable.Function(names(EDA.Bar.Source)[2]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[3]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[4]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[5]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[6]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[7]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[8]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[9]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[10]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[11]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[12]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[13]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[14]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[15]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[16]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[17]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[18]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[19]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[20]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[21]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[22]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[23]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[24]),
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[25]))
+
+(EDA.Barchart.FactorVar <- barchart(EDA.Bar.Source.FactorVar.Prop.Group[,3] ~
+                                      EDA.Bar.Source.FactorVar.Prop.Group[,2] | EDA.Bar.Source.FactorVar.Prop.Group[,4],
+                                      data=EDA.Bar.Source.FactorVar.Prop.Group,
+                                      groups = EDA.Bar.Source.FactorVar.Prop.Group[,1],
+                                      stack=TRUE,
+                                      ylab = "Proportion",
+                                      xlab = "Structure",
+                                      auto.key = list(adj = 1),
+                                      layout=(c(6,4))))
+
+##################################
+# Formulating the Kaplan-Meier plots
+# for the categorical variables
+##################################
+KM_PreModelling_Train <- PMA_PreModelling_Train
+KM_PreModelling_Train$died <- as.numeric(KM_PreModelling_Train$died )
+
+KM_betablok <- survfit(Surv(ttodead, died) ~ betablok,
+                      data=KM_PreModelling_Train)
+KMPlot_betablok <- ggsurvplot(KM_betablok,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_aspirin <- survfit(Surv(ttodead, died) ~ aspirin,
+                      data=KM_PreModelling_Train)
+KMPlot_aspirin <- ggsurvplot(KM_aspirin,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_anti.coag <- survfit(Surv(ttodead, died) ~ anti.coag,
+                      data=KM_PreModelling_Train)
+KMPlot_anti.coag <- ggsurvplot(KM_anti.coag,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_anti.arrhy <- survfit(Surv(ttodead, died) ~ anti.arrhy,
+                      data=KM_PreModelling_Train)
+KMPlot_anti.arrhy <- ggsurvplot(KM_anti.arrhy,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_angioten.II <- survfit(Surv(ttodead, died) ~ angioten.II,
+                      data=KM_PreModelling_Train)
+KMPlot_angioten.II <- ggsurvplot(KM_angioten.II,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_acei <- survfit(Surv(ttodead, died) ~ acei,
+                      data=KM_PreModelling_Train)
+KMPlot_acei <- ggsurvplot(KM_acei,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_diuretic.thiazide <- survfit(Surv(ttodead, died) ~ diuretic.thiazide,
+                      data=KM_PreModelling_Train)
+KMPlot_diuretic.thiazide <- ggsurvplot(KM_diuretic.thiazide,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_diuretic.potassium.spar <- survfit(Surv(ttodead, died) ~ diuretic.potassium.spar,
+                      data=KM_PreModelling_Train)
+KMPlot_diuretic.potassium.spar <- ggsurvplot(KM_diuretic.potassium.spar,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_diuretic.loop <- survfit(Surv(ttodead, died) ~ diuretic.loop,
+                      data=KM_PreModelling_Train)
+KMPlot_diuretic.loop <- ggsurvplot(KM_diuretic.loop,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_digoxin <- survfit(Surv(ttodead, died) ~ digoxin,
+                      data=KM_PreModelling_Train)
+KMPlot_digoxin <- ggsurvplot(KM_digoxin,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_cad <- survfit(Surv(ttodead, died) ~ cad,
+                      data=KM_PreModelling_Train)
+KMPlot_cad <- ggsurvplot(KM_cad,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_black <- survfit(Surv(ttodead, died) ~ black,
+                      data=KM_PreModelling_Train)
+KMPlot_black <- ggsurvplot(KM_black,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_q.wave.mi <- survfit(Surv(ttodead, died) ~ q.wave.mi,
+                      data=KM_PreModelling_Train)
+KMPlot_q.wave.mi <- ggsurvplot(KM_q.wave.mi,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_nitrates <- survfit(Surv(ttodead, died) ~ nitrates,
+                      data=KM_PreModelling_Train)
+KMPlot_nitrates <- ggsurvplot(KM_nitrates,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_niddm <- survfit(Surv(ttodead, died) ~ niddm,
+                      data=KM_PreModelling_Train)
+KMPlot_niddm <- ggsurvplot(KM_niddm,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_male <- survfit(Surv(ttodead, died) ~ male,
+                      data=KM_PreModelling_Train)
+KMPlot_male <- ggsurvplot(KM_male,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_lipidrx.statin <- survfit(Surv(ttodead, died) ~ lipidrx.statin,
+                      data=KM_PreModelling_Train)
+KMPlot_lipidrx.statin <- ggsurvplot(KM_lipidrx.statin,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_insulin <- survfit(Surv(ttodead, died) ~ insulin,
+                      data=KM_PreModelling_Train)
+KMPlot_insulin <- ggsurvplot(KM_insulin,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_vasodilator <- survfit(Surv(ttodead, died) ~ vasodilator,
+                      data=KM_PreModelling_Train)
+KMPlot_vasodilator <- ggsurvplot(KM_vasodilator,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_surgery.pci <- survfit(Surv(ttodead, died) ~ surgery.pci,
+                      data=KM_PreModelling_Train)
+KMPlot_surgery.pci <- ggsurvplot(KM_surgery.pci,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_surgery.pacemaker <- survfit(Surv(ttodead, died) ~ surgery.pacemaker,
+                      data=KM_PreModelling_Train)
+KMPlot_surgery.pacemaker <- ggsurvplot(KM_surgery.pacemaker,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_surgery.cabg <- survfit(Surv(ttodead, died) ~ surgery.cabg,
+                      data=KM_PreModelling_Train)
+KMPlot_surgery.cabg <- ggsurvplot(KM_surgery.cabg,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_surgery.aicd.implant <- survfit(Surv(ttodead, died) ~ surgery.aicd.implant,
+                      data=KM_PreModelling_Train)
+KMPlot_surgery.aicd.implant <- ggsurvplot(KM_surgery.aicd.implant,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KM_smknow <- survfit(Surv(ttodead, died) ~ smknow,
+                      data=KM_PreModelling_Train)
+KMPlot_smknow <- ggsurvplot(KM_smknow,
+                            xlab="Survival Time",
+                            ylab="Survival Probability",
+                            break.time.by=12,
+                            ggtheme=theme_bw(),
+                            fontsize=3,
+                            pval.size=3,
+                            pval=TRUE)
+
+KMPlot_List <- list()
+KMPlot_List[[1]] <- KMPlot_betablok
+KMPlot_List[[2]] <- KMPlot_aspirin
+KMPlot_List[[3]] <- KMPlot_anti.coag
+KMPlot_List[[4]] <- KMPlot_anti.arrhy
+KMPlot_List[[5]] <- KMPlot_angioten.II
+KMPlot_List[[6]] <- KMPlot_acei
+KMPlot_List[[7]] <- KMPlot_diuretic.thiazide
+KMPlot_List[[8]] <- KMPlot_diuretic.potassium.spar
+KMPlot_List[[9]] <- KMPlot_diuretic.loop
+KMPlot_List[[10]] <- KMPlot_digoxin
+KMPlot_List[[11]] <- KMPlot_cad
+KMPlot_List[[12]] <- KMPlot_black
+
+arrange_ggsurvplots(KMPlot_List,
+                    ncol=4,
+                    nrow=3)
+
+KMPlot_List <- list()
+KMPlot_List[[1]] <- KMPlot_q.wave.mi
+KMPlot_List[[2]] <- KMPlot_nitrates
+KMPlot_List[[3]] <- KMPlot_niddm
+KMPlot_List[[4]] <- KMPlot_male
+KMPlot_List[[5]] <- KMPlot_lipidrx.statin
+KMPlot_List[[6]] <- KMPlot_insulin
+KMPlot_List[[7]] <- KMPlot_vasodilator
+KMPlot_List[[8]] <- KMPlot_surgery.pci
+KMPlot_List[[9]] <- KMPlot_surgery.pacemaker
+KMPlot_List[[10]] <- KMPlot_surgery.cabg
+KMPlot_List[[11]] <- KMPlot_surgery.aicd.implant
+KMPlot_List[[12]] <- KMPlot_smknow
+
+arrange_ggsurvplots(KMPlot_List,
+                    ncol=4,
+                    nrow=3)
 
 ```
 
