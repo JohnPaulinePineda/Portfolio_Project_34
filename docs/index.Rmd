@@ -18,11 +18,99 @@ knitr::opts_chunk$set(echo = TRUE)
 |
 ##  1.1 Sample Data
 |
+| The <mark style="background-color: #EEEEEE;color: #FF0000">**peakVO2**</mark>  dataset from the  <mark style="background-color: #CCECFF">**randomForestSRC**</mark> package was used for this illustrated example.
+|
+| Preliminary dataset assessment:
+|
+| **[A]** 2231 rows (observations)
+| 
+| **[B]** 41 columns (variables)
+|      **[B.1]** 1/41 survival event status = <span style="color: #FF0000">died</span> variable (factor)
+|             **[B.1.1]** Event = <span style="color: #FF0000">died=1</span> 
+|             **[B.1.2]** Censored or Non-Event = <span style="color: #FF0000">died=0</span>
+|      **[B.2]** 1/41 survival time = <span style="color: #FF0000">ttodead</span> variable (numeric)
+|      **[B.3]** 39/41 predictors = All remaining variables (26/39 factor + 13/39 numeric)
+
+|
 |
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.1, warning=FALSE, message=FALSE}
+##################################
+# Loading R libraries
+##################################
+library(survival)
+library(survminer)
+library(mice)
+library(foreign)
+library(rms)
+library(Hmisc)
+library(VIM)
+library(gridExtra)
+library(finalfit)
+library(knitr)
+library(dplyr)
+library(gtsummary)
+library(tidyr)
+library(purrr)
+library(moments)
+library(skimr)
+library(caret)
+library(corrplot)
+library(randomForestSRC)
+library(SurvMetrics)
+library(pec)
+library(hdnom)
+
+##################################
+# Loading source and
+# formulating the train set
+##################################
+data(peakVO2)
+peakVO2 <- as.data.frame(peakVO2)
+
+##################################
+# Converting survival time
+# to discrete monthly data
+##################################
+peakVO2$ttodead <- ceiling(peakVO2$ttodead*12)
+peakVO2.Source <- peakVO2
+
+##################################
+# Setting the appropriate data types
+# for exploratory data analysis
+##################################
+peakVO2.Assessment <- (as.data.frame(sapply(peakVO2, function(x) max(x))))
+names(peakVO2.Assessment) <- c("Max.Value")
+peakVO2.Assessment$Variables <- rownames(peakVO2.Assessment)
+peakVO2.Assessment
+
+(peakVO2.FactorNames <- peakVO2.Assessment[peakVO2.Assessment[,1]==1,2])
+peakVO2.Factor <- peakVO2[,peakVO2.FactorNames]
+peakVO2.Factor <- as.data.frame(lapply(peakVO2.Factor, factor))
+
+peakVO2.Numeric <- as.data.frame(peakVO2[,!names(peakVO2) %in% peakVO2.FactorNames])
+
+peakVO2 <- data.frame(peakVO2.Numeric,peakVO2.Factor)
+
+##################################
+# Performing a general exploration of the data set
+##################################
+dim(peakVO2)
+str(peakVO2)
+summary(peakVO2)
+
+##################################
+# Formulating a data type assessment summary
+##################################
+PDA <- peakVO2
+(PDA.Summary <- data.frame(
+  Column.Index=c(1:length(names(PDA))),
+  Column.Name= names(PDA), 
+  Column.Type=sapply(PDA, function(x) class(x)), 
+  row.names=NULL)
+)
 
 ```
 

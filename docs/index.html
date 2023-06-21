@@ -233,6 +233,107 @@ window.buildTabsets = function(tocID) {
 
 
 
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -412,12 +513,299 @@ References</strong></a></li>
 <div id="sample-data" class="section level2">
 <h2>1.1 Sample Data</h2>
 <div class="line-block"><br />
+The
+<mark style="background-color: #EEEEEE;color: #FF0000"><strong>peakVO2</strong></mark>
+dataset from the
+<mark style="background-color: #CCECFF"><strong>randomForestSRC</strong></mark>
+package was used for this illustrated example.<br />
+<br />
+Preliminary dataset assessment:<br />
+<br />
+<strong>[A]</strong> 2231 rows (observations)<br />
+<br />
+<strong>[B]</strong> 41 columns (variables)<br />
+     <strong>[B.1]</strong> 1/41 survival event status = <span style="color: #FF0000">died</span> variable (factor)<br />
+            <strong>[B.1.1]</strong> Event = <span style="color: #FF0000">died=1</span><br />
+            <strong>[B.1.2]</strong> Censored or Non-Event = <span style="color: #FF0000">died=0</span><br />
+     <strong>[B.2]</strong> 1/41 survival time = <span style="color: #FF0000">ttodead</span> variable (numeric)<br />
+     <strong>[B.3]</strong> 39/41 predictors = All remaining variables
+(26/39 factor + 13/39 numeric)</div>
+<div class="line-block"><br />
 </div>
 <details>
 <summary>
 <mark style="background-color: #000000;color: #FFFFFF"><strong>Code
 Chunk | Output</strong></mark>
 </summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading R libraries</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survminer)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreign)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rms)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(finalfit)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForestSRC)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SurvMetrics)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pec)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdnom)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading source and</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># formulating the train set</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(peakVO2)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>peakVO2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(peakVO2)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting survival time</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># to discrete monthly data</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>peakVO2<span class="sc">$</span>ttodead <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(peakVO2<span class="sc">$</span>ttodead<span class="sc">*</span><span class="dv">12</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>peakVO2.Source <span class="ot">&lt;-</span> peakVO2</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the appropriate data types</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># for exploratory data analysis</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>peakVO2.Assessment <span class="ot">&lt;-</span> (<span class="fu">as.data.frame</span>(<span class="fu">sapply</span>(peakVO2, <span class="cf">function</span>(x) <span class="fu">max</span>(x))))</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(peakVO2.Assessment) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Max.Value&quot;</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>peakVO2.Assessment<span class="sc">$</span>Variables <span class="ot">&lt;-</span> <span class="fu">rownames</span>(peakVO2.Assessment)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>peakVO2.Assessment</span></code></pre></div>
+<pre><code>##                          Max.Value               Variables
+## age                       82.00000                     age
+## betablok                   1.00000                betablok
+## dilver                     1.00000                  dilver
+## nifed                      1.00000                   nifed
+## acei                       1.00000                    acei
+## angioten.II                1.00000             angioten.II
+## anti.arrhy                 1.00000              anti.arrhy
+## anti.coag                  1.00000               anti.coag
+## aspirin                    1.00000                 aspirin
+## digoxin                    1.00000                 digoxin
+## nitrates                   1.00000                nitrates
+## vasodilator                1.00000             vasodilator
+## diuretic.loop              1.00000           diuretic.loop
+## diuretic.thiazide          1.00000       diuretic.thiazide
+## diuretic.potassium.spar    1.00000 diuretic.potassium.spar
+## lipidrx.statin             1.00000          lipidrx.statin
+## insulin                    1.00000                 insulin
+## surgery.pacemaker          1.00000       surgery.pacemaker
+## surgery.cabg               1.00000            surgery.cabg
+## surgery.pci                1.00000             surgery.pci
+## surgery.aicd.implant       1.00000    surgery.aicd.implant
+## resting.systolic.bp      184.00000     resting.systolic.bp
+## resting.hr               124.00000              resting.hr
+## smknow                     1.00000                  smknow
+## q.wave.mi                  1.00000               q.wave.mi
+## bmi                       59.61593                     bmi
+## niddm                      1.00000                   niddm
+## lvef.metabl               40.00000             lvef.metabl
+## peak.rer                   1.80000                peak.rer
+## peak.vo2                  43.80000                peak.vo2
+## interval                1415.00000                interval
+## cad                        1.00000                     cad
+## died                       1.00000                    died
+## ttodead                  127.00000                 ttodead
+## bun                      129.00000                     bun
+## sodium                   152.00000                  sodium
+## hgb                       19.20000                     hgb
+## glucose                  424.00000                 glucose
+## male                       1.00000                    male
+## black                      1.00000                   black
+## crcl                     385.84097                    crcl</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(peakVO2.FactorNames <span class="ot">&lt;-</span> peakVO2.Assessment[peakVO2.Assessment[,<span class="dv">1</span>]<span class="sc">==</span><span class="dv">1</span>,<span class="dv">2</span>])</span></code></pre></div>
+<pre><code>##  [1] &quot;betablok&quot;                &quot;dilver&quot;                 
+##  [3] &quot;nifed&quot;                   &quot;acei&quot;                   
+##  [5] &quot;angioten.II&quot;             &quot;anti.arrhy&quot;             
+##  [7] &quot;anti.coag&quot;               &quot;aspirin&quot;                
+##  [9] &quot;digoxin&quot;                 &quot;nitrates&quot;               
+## [11] &quot;vasodilator&quot;             &quot;diuretic.loop&quot;          
+## [13] &quot;diuretic.thiazide&quot;       &quot;diuretic.potassium.spar&quot;
+## [15] &quot;lipidrx.statin&quot;          &quot;insulin&quot;                
+## [17] &quot;surgery.pacemaker&quot;       &quot;surgery.cabg&quot;           
+## [19] &quot;surgery.pci&quot;             &quot;surgery.aicd.implant&quot;   
+## [21] &quot;smknow&quot;                  &quot;q.wave.mi&quot;              
+## [23] &quot;niddm&quot;                   &quot;cad&quot;                    
+## [25] &quot;died&quot;                    &quot;male&quot;                   
+## [27] &quot;black&quot;</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>peakVO2.Factor <span class="ot">&lt;-</span> peakVO2[,peakVO2.FactorNames]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>peakVO2.Factor <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">lapply</span>(peakVO2.Factor, factor))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>peakVO2.Numeric <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(peakVO2[,<span class="sc">!</span><span class="fu">names</span>(peakVO2) <span class="sc">%in%</span> peakVO2.FactorNames])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>peakVO2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(peakVO2.Numeric,peakVO2.Factor)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Performing a general exploration of the data set</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(peakVO2)</span></code></pre></div>
+<pre><code>## [1] 2231   41</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(peakVO2)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    2231 obs. of  41 variables:
+##  $ age                    : int  74 77 79 67 79 51 56 69 41 45 ...
+##  $ resting.systolic.bp    : int  90 134 108 122 130 122 100 104 108 100 ...
+##  $ resting.hr             : int  74 53 104 96 94 62 79 72 71 84 ...
+##  $ bmi                    : num  26.1 20.8 20.7 26.7 23.6 ...
+##  $ lvef.metabl            : num  15 20 40 25 20 10 10 15 20 25 ...
+##  $ peak.rer               : num  1.12 0.98 1.15 1.21 1.06 0.98 0.91 1.2 1.17 0.89 ...
+##  $ peak.vo2               : num  11.9 24 11.2 15.6 17.2 15.7 6 15.9 23.8 15 ...
+##  $ interval               : int  374 755 225 405 580 635 145 480 840 453 ...
+##  $ ttodead                : num  15 44 3 127 45 15 13 11 122 9 ...
+##  $ bun                    : num  25 20 29.7 27.9 39 ...
+##  $ sodium                 : num  141 138 140 139 143 ...
+##  $ hgb                    : num  14.6 13.1 12.9 13.2 12.5 ...
+##  $ glucose                : num  89 90 98.7 136.9 104 ...
+##  $ crcl                   : num  49.9 60.4 33.6 69.3 44.7 ...
+##  $ betablok               : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 2 1 1 2 1 1 1 1 1 ...
+##  $ dilver                 : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ nifed                  : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ acei                   : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 2 1 2 1 2 2 2 2 2 ...
+##  $ angioten.II            : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 1 2 1 1 1 1 1 ...
+##  $ anti.arrhy             : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 1 1 2 2 2 1 1 ...
+##  $ anti.coag              : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 2 1 1 2 1 1 2 ...
+##  $ aspirin                : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 2 2 1 2 2 1 2 1 1 ...
+##  $ digoxin                : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 2 2 2 1 2 2 2 2 2 ...
+##  $ nitrates               : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 2 1 1 ...
+##  $ vasodilator            : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ diuretic.loop          : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 2 2 2 2 2 2 2 1 2 ...
+##  $ diuretic.thiazide      : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ diuretic.potassium.spar: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 2 1 1 1 ...
+##  $ lipidrx.statin         : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 1 2 1 1 2 1 1 ...
+##  $ insulin                : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 1 1 1 1 1 1 1 ...
+##  $ surgery.pacemaker      : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 2 1 1 1 2 ...
+##  $ surgery.cabg           : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 2 1 1 1 1 1 ...
+##  $ surgery.pci            : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 2 1 1 1 1 1 ...
+##  $ surgery.aicd.implant   : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 1 1 2 1 2 1 1 ...
+##  $ smknow                 : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ q.wave.mi              : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ niddm                  : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 2 2 1 1 1 1 1 ...
+##  $ cad                    : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 1 1 2 2 1 1 1 1 ...
+##  $ died                   : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 2 1 2 2 2 2 1 2 ...
+##  $ male                   : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 2 1 2 2 2 1 1 2 1 1 ...
+##  $ black                  : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 1 1 1 1 2 2 1 1 ...</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(peakVO2)</span></code></pre></div>
+<pre><code>##       age        resting.systolic.bp   resting.hr          bmi       
+##  Min.   :18.00   Min.   : 80.0       Min.   : 39.00   Min.   :14.18  
+##  1st Qu.:48.00   1st Qu.: 98.0       1st Qu.: 66.00   1st Qu.:24.52  
+##  Median :55.00   Median :110.0       Median : 75.00   Median :27.78  
+##  Mean   :54.22   Mean   :110.5       Mean   : 76.18   Mean   :28.50  
+##  3rd Qu.:62.00   3rd Qu.:122.0       3rd Qu.: 86.00   3rd Qu.:31.89  
+##  Max.   :82.00   Max.   :184.0       Max.   :124.00   Max.   :59.62  
+##   lvef.metabl       peak.rer        peak.vo2        interval     
+##  Min.   : 5.00   Min.   :0.079   Min.   : 4.20   Min.   :  21.0  
+##  1st Qu.:15.00   1st Qu.:1.020   1st Qu.:12.80   1st Qu.: 345.0  
+##  Median :20.00   Median :1.100   Median :15.70   Median : 480.0  
+##  Mean   :20.26   Mean   :1.079   Mean   :16.27   Mean   : 503.3  
+##  3rd Qu.:25.00   3rd Qu.:1.140   3rd Qu.:19.30   3rd Qu.: 641.0  
+##  Max.   :40.00   Max.   :1.800   Max.   :43.80   Max.   :1415.0  
+##     ttodead            bun              sodium           hgb       
+##  Min.   :  1.00   Min.   :  4.322   Min.   :120.0   Min.   : 7.20  
+##  1st Qu.: 30.00   1st Qu.: 17.000   1st Qu.:138.0   1st Qu.:12.80  
+##  Median : 62.00   Median : 23.000   Median :139.8   Median :13.58  
+##  Mean   : 62.75   Mean   : 25.278   Mean   :139.5   Mean   :13.54  
+##  3rd Qu.: 95.00   3rd Qu.: 29.334   3rd Qu.:141.0   3rd Qu.:14.40  
+##  Max.   :127.00   Max.   :129.000   Max.   :152.0   Max.   :19.20  
+##     glucose            crcl        betablok dilver   nifed    acei    
+##  Min.   : 37.00   Min.   :  5.76   0: 802   0:2215   0:2132   0: 520  
+##  1st Qu.: 87.00   1st Qu.: 60.93   1:1429   1:  16   1:  99   1:1711  
+##  Median : 96.93   Median : 83.13                                      
+##  Mean   :109.35   Mean   : 90.71                                      
+##  3rd Qu.:114.88   3rd Qu.:110.33                                      
+##  Max.   :424.00   Max.   :385.84                                      
+##  angioten.II anti.arrhy anti.coag aspirin  digoxin  nitrates vasodilator
+##  0:1941      0:1722     0:1332    0:1193   0: 661   0:1492   0:2095     
+##  1: 290      1: 509     1: 899    1:1038   1:1570   1: 739   1: 136     
+##                                                                         
+##                                                                         
+##                                                                         
+##                                                                         
+##  diuretic.loop diuretic.thiazide diuretic.potassium.spar lipidrx.statin
+##  0: 351        0:1952            0:1582                  0:1381        
+##  1:1880        1: 279            1: 649                  1: 850        
+##                                                                        
+##                                                                        
+##                                                                        
+##                                                                        
+##  insulin  surgery.pacemaker surgery.cabg surgery.pci surgery.aicd.implant
+##  0:2016   0:1729            0:1637       0:1755      0:1584              
+##  1: 215   1: 502            1: 594       1: 476      1: 647              
+##                                                                          
+##                                                                          
+##                                                                          
+##                                                                          
+##  smknow   q.wave.mi niddm    cad      died     male     black   
+##  0:1772   0:1952    0:1881   0:1325   0:1505   0: 602   0:1965  
+##  1: 459   1: 279    1: 350   1: 906   1: 726   1:1629   1: 266  
+##                                                                 
+##                                                                 
+##                                                                 
+## </code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulating a data type assessment summary</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>PDA <span class="ot">&lt;-</span> peakVO2</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>(PDA.Summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Index=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">names</span>(PDA))),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Name=</span> <span class="fu">names</span>(PDA), </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Type=</span><span class="fu">sapply</span>(PDA, <span class="cf">function</span>(x) <span class="fu">class</span>(x)), </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">NULL</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##    Column.Index             Column.Name Column.Type
+## 1             1                     age     integer
+## 2             2     resting.systolic.bp     integer
+## 3             3              resting.hr     integer
+## 4             4                     bmi     numeric
+## 5             5             lvef.metabl     numeric
+## 6             6                peak.rer     numeric
+## 7             7                peak.vo2     numeric
+## 8             8                interval     integer
+## 9             9                 ttodead     numeric
+## 10           10                     bun     numeric
+## 11           11                  sodium     numeric
+## 12           12                     hgb     numeric
+## 13           13                 glucose     numeric
+## 14           14                    crcl     numeric
+## 15           15                betablok      factor
+## 16           16                  dilver      factor
+## 17           17                   nifed      factor
+## 18           18                    acei      factor
+## 19           19             angioten.II      factor
+## 20           20              anti.arrhy      factor
+## 21           21               anti.coag      factor
+## 22           22                 aspirin      factor
+## 23           23                 digoxin      factor
+## 24           24                nitrates      factor
+## 25           25             vasodilator      factor
+## 26           26           diuretic.loop      factor
+## 27           27       diuretic.thiazide      factor
+## 28           28 diuretic.potassium.spar      factor
+## 29           29          lipidrx.statin      factor
+## 30           30                 insulin      factor
+## 31           31       surgery.pacemaker      factor
+## 32           32            surgery.cabg      factor
+## 33           33             surgery.pci      factor
+## 34           34    surgery.aicd.implant      factor
+## 35           35                  smknow      factor
+## 36           36               q.wave.mi      factor
+## 37           37                   niddm      factor
+## 38           38                     cad      factor
+## 39           39                    died      factor
+## 40           40                    male      factor
+## 41           41                   black      factor</code></pre>
 </details>
 </div>
 <div id="data-quality-assessment" class="section level2">
