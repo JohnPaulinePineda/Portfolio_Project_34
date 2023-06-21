@@ -365,11 +365,74 @@ if (length(names(DQA.Descriptors.Numeric))==0) {
 
 ###  1.3.1 Outlier
 |
+| Outlier data assessment:
+|
+| **[A]** Outliers noted for 12 variables  with the numeric data visualized through a boxplot including observations classified as suspected outliers using the IQR criterion. The IQR criterion means that all observations above the (75th percentile + 1.5 x IQR) or below the (25th percentile - 1.5 x IQR) are suspected outliers, where IQR is the difference between the third quartile (75th percentile) and first quartile (25th percentile). Outlier treatment for numerical stability remains optional depending on potential model requirements for the subsequent steps.
+|      **[A.1]** <span style="color: #FF0000">age</span> variable (33 outliers detected)
+|      **[A.2]** <span style="color: #FF0000">resting.systolic.bp</span> variable (26 outliers detected)
+|      **[A.3]** <span style="color: #FF0000">resting.hr</span> variable (9 outliers detected)
+|      **[A.4]** <span style="color: #FF0000">bmi</span> variable (34 outliers detected)
+|      **[A.5]** <span style="color: #FF0000">peak.rer</span> variable (102 outliers detected)
+|      **[A.6]** <span style="color: #FF0000">peak.vo2</span> variable (40 outliers detected)
+|      **[A.7]** <span style="color: #FF0000">interval</span> variable (25 outliers detected)
+|      **[A.8]** <span style="color: #FF0000">bun</span> variable (116 outliers detected)
+|      **[A.9]** <span style="color: #FF0000">sodium</span> variable (140 outliers detected)
+|      **[A.10]** <span style="color: #FF0000">hgb</span> variable (83 outliers detected)
+|      **[A.11]** <span style="color: #FF0000">glucose</span> variable (222 outliers detected)
+|      **[A.12]** <span style="color: #FF0000">crcl</span> variable (82 outliers detected)
+|
 |
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.3.1, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DPA <- peakVO2
+
+##################################
+# Listing all predictors
+##################################
+DPA.Predictors <- DPA[,!names(DPA) %in% c("died","ttodead")]
+
+##################################
+# Listing all numeric predictors
+##################################
+DPA.Predictors.Numeric <- DPA.Predictors[,sapply(DPA.Predictors, is.numeric)]
+
+##################################
+# Identifying outliers for the numeric predictors
+##################################
+OutlierCountList <- c()
+
+for (i in 1:ncol(DPA.Predictors.Numeric)) {
+  Outliers <- boxplot.stats(DPA.Predictors.Numeric[,i])$out
+  OutlierCount <- length(Outliers)
+  OutlierCountList <- append(OutlierCountList,OutlierCount)
+  OutlierIndices <- which(DPA.Predictors.Numeric[,i] %in% c(Outliers))
+  boxplot(DPA.Predictors.Numeric[,i], 
+          ylab = names(DPA.Predictors.Numeric)[i], 
+          main = names(DPA.Predictors.Numeric)[i],
+          horizontal=TRUE)
+  mtext(paste0(OutlierCount, " Outlier(s) Detected"))
+}
+
+OutlierCountSummary <- as.data.frame(cbind(names(DPA.Predictors.Numeric),(OutlierCountList)))
+names(OutlierCountSummary) <- c("NumericPredictors","OutlierCount")
+OutlierCountSummary$OutlierCount <- as.numeric(as.character(OutlierCountSummary$OutlierCount))
+NumericPredictorWithOutlierCount <- nrow(OutlierCountSummary[OutlierCountSummary$OutlierCount>0,])
+print(paste0(NumericPredictorWithOutlierCount, " numeric variable(s) were noted with outlier(s)." ))
+
+##################################
+# Gathering descriptive statistics
+##################################
+(DPA_Skimmed <- skim(DPA.Predictors.Numeric))
+
+###################################
+# Verifying the data dimensions
+###################################
+dim(DPA.Predictors.Numeric)
 
 ```
 
