@@ -811,12 +811,513 @@ Chunk | Output</strong></mark>
 <div id="data-quality-assessment" class="section level2">
 <h2>1.2 Data Quality Assessment</h2>
 <div class="line-block"><br />
+Data quality assessment:<br />
+<br />
+<strong>[A]</strong> No missing observations noted for any
+variable.<br />
+<br />
+<strong>[B]</strong> Low variance observed for 10 variables with
+First.Second.Mode.Ratio&gt;5.<br />
+     <strong>[B.1]</strong> <span style="color: #FF0000">dilver</span>
+variable (factor)<br />
+     <strong>[B.2]</strong> <span style="color: #FF0000">nifed</span>
+variable (factor)<br />
+     <strong>[B.3]</strong> <span style="color: #FF0000">angioten.II</span> variable (factor)<br />
+     <strong>[B.4]</strong> <span style="color: #FF0000">vasodilator</span> variable (factor)<br />
+     <strong>[B.5]</strong> <span style="color: #FF0000">diuretic.loop</span> variable (factor)<br />
+     <strong>[B.6]</strong> <span style="color: #FF0000">diuretic.thiazide</span> variable (factor)<br />
+     <strong>[B.7]</strong> <span style="color: #FF0000">insulin</span>
+variable (factor)<br />
+     <strong>[B.8]</strong> <span style="color: #FF0000">q.wave.mi</span> variable (factor)<br />
+     <strong>[B.9]</strong> <span style="color: #FF0000">niddm</span>
+variable (factor)<br />
+     <strong>[B.10]</strong> <span style="color: #FF0000">black</span>
+variable (factor)<br />
+<br />
+<strong>[C]</strong> No low variance observed for any variable with
+Unique.Count.Ratio&lt;0.01.<br />
+<br />
+<strong>[D]</strong> No high skewness observed for any variable with
+Skewness&gt;3 or Skewness&lt;(-3).<br />
+<br />
 </div>
 <details>
 <summary>
 <mark style="background-color: #000000;color: #FFFFFF"><strong>Code
 Chunk | Output</strong></mark>
 </summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading dataset</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>DQA <span class="ot">&lt;-</span> peakVO2</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulating an overall data quality assessment summary</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>(DQA.Summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Index=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">names</span>(DQA))),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Name=</span> <span class="fu">names</span>(DQA),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Type=</span><span class="fu">sapply</span>(DQA, <span class="cf">function</span>(x) <span class="fu">class</span>(x)),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Row.Count=</span><span class="fu">sapply</span>(DQA, <span class="cf">function</span>(x) <span class="fu">nrow</span>(DQA)),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">NA.Count=</span><span class="fu">sapply</span>(DQA,<span class="cf">function</span>(x)<span class="fu">sum</span>(<span class="fu">is.na</span>(x))),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fill.Rate=</span><span class="fu">sapply</span>(DQA,<span class="cf">function</span>(x)<span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(x))<span class="sc">/</span><span class="fu">nrow</span>(DQA)),<span class="dv">3</span>),<span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">NULL</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##    Column.Index             Column.Name Column.Type Row.Count NA.Count
+## 1             1                     age     integer      2231        0
+## 2             2     resting.systolic.bp     integer      2231        0
+## 3             3              resting.hr     integer      2231        0
+## 4             4                     bmi     numeric      2231        0
+## 5             5             lvef.metabl     numeric      2231        0
+## 6             6                peak.rer     numeric      2231        0
+## 7             7                peak.vo2     numeric      2231        0
+## 8             8                interval     integer      2231        0
+## 9             9                 ttodead     numeric      2231        0
+## 10           10                     bun     numeric      2231        0
+## 11           11                  sodium     numeric      2231        0
+## 12           12                     hgb     numeric      2231        0
+## 13           13                 glucose     numeric      2231        0
+## 14           14                    crcl     numeric      2231        0
+## 15           15                betablok      factor      2231        0
+## 16           16                  dilver      factor      2231        0
+## 17           17                   nifed      factor      2231        0
+## 18           18                    acei      factor      2231        0
+## 19           19             angioten.II      factor      2231        0
+## 20           20              anti.arrhy      factor      2231        0
+## 21           21               anti.coag      factor      2231        0
+## 22           22                 aspirin      factor      2231        0
+## 23           23                 digoxin      factor      2231        0
+## 24           24                nitrates      factor      2231        0
+## 25           25             vasodilator      factor      2231        0
+## 26           26           diuretic.loop      factor      2231        0
+## 27           27       diuretic.thiazide      factor      2231        0
+## 28           28 diuretic.potassium.spar      factor      2231        0
+## 29           29          lipidrx.statin      factor      2231        0
+## 30           30                 insulin      factor      2231        0
+## 31           31       surgery.pacemaker      factor      2231        0
+## 32           32            surgery.cabg      factor      2231        0
+## 33           33             surgery.pci      factor      2231        0
+## 34           34    surgery.aicd.implant      factor      2231        0
+## 35           35                  smknow      factor      2231        0
+## 36           36               q.wave.mi      factor      2231        0
+## 37           37                   niddm      factor      2231        0
+## 38           38                     cad      factor      2231        0
+## 39           39                    died      factor      2231        0
+## 40           40                    male      factor      2231        0
+## 41           41                   black      factor      2231        0
+##    Fill.Rate
+## 1      1.000
+## 2      1.000
+## 3      1.000
+## 4      1.000
+## 5      1.000
+## 6      1.000
+## 7      1.000
+## 8      1.000
+## 9      1.000
+## 10     1.000
+## 11     1.000
+## 12     1.000
+## 13     1.000
+## 14     1.000
+## 15     1.000
+## 16     1.000
+## 17     1.000
+## 18     1.000
+## 19     1.000
+## 20     1.000
+## 21     1.000
+## 22     1.000
+## 23     1.000
+## 24     1.000
+## 25     1.000
+## 26     1.000
+## 27     1.000
+## 28     1.000
+## 29     1.000
+## 30     1.000
+## 31     1.000
+## 32     1.000
+## 33     1.000
+## 34     1.000
+## 35     1.000
+## 36     1.000
+## 37     1.000
+## 38     1.000
+## 39     1.000
+## 40     1.000
+## 41     1.000</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all descriptors</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>DQA.Descriptors <span class="ot">&lt;-</span> DQA</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all numeric Descriptors</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>DQA.Descriptors.Numeric <span class="ot">&lt;-</span> DQA.Descriptors[,<span class="fu">sapply</span>(DQA.Descriptors, is.numeric)]</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Numeric))<span class="sc">&gt;</span><span class="dv">0</span>) {</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;There are &quot;</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>               (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Numeric))),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot; numeric descriptor variable(s).&quot;</span>))</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;There are no numeric descriptor variables.&quot;</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;There are 14 numeric descriptor variable(s).&quot;</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Listing all factor Descriptors</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>DQA.Descriptors.Factor <span class="ot">&lt;-</span> DQA.Descriptors[,<span class="fu">sapply</span>(DQA.Descriptors, is.factor)]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Factor))<span class="sc">&gt;</span><span class="dv">0</span>) {</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;There are &quot;</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>               (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Factor))),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot; factor descriptor variable(s).&quot;</span>))</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;There are no factor descriptor variables.&quot;</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;There are 27 factor descriptor variable(s).&quot;</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulating a data quality assessment summary for factor Descriptors</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Factor))<span class="sc">&gt;</span><span class="dv">0</span>) {</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Formulating a function to determine the first mode</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  FirstModes <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    ux <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">na.omit</span>(x))</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    tab <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(x, ux))</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    ux[tab <span class="sc">==</span> <span class="fu">max</span>(tab)]</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Formulating a function to determine the second mode</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  SecondModes <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    ux <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">na.omit</span>(x))</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    tab <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(x, ux))</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    fm <span class="ot">=</span> ux[tab <span class="sc">==</span> <span class="fu">max</span>(tab)]</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    sm <span class="ot">=</span> x[<span class="sc">!</span>(x <span class="sc">%in%</span> fm)]</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    usm <span class="ot">&lt;-</span> <span class="fu">unique</span>(sm)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    tabsm <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(sm, usm))</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">is.na</span>(usm[tabsm <span class="sc">==</span> <span class="fu">max</span>(tabsm)])<span class="sc">==</span><span class="cn">TRUE</span>,</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>           <span class="fu">return</span>(<span class="st">&quot;x&quot;</span>),</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>           <span class="fu">return</span>(usm[tabsm <span class="sc">==</span> <span class="fu">max</span>(tabsm)]))</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  (DQA.Descriptors.Factor.Summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Name=</span> <span class="fu">names</span>(DQA.Descriptors.Factor),</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Type=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">class</span>(x)),</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">Unique.Count=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">length</span>(<span class="fu">unique</span>(x))),</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">First.Mode.Value=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">as.character</span>(<span class="fu">FirstModes</span>(x)[<span class="dv">1</span>])),</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">Second.Mode.Value=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">as.character</span>(<span class="fu">SecondModes</span>(x)[<span class="dv">1</span>])),</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">First.Mode.Count=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">FirstModes</span>(x)[<span class="dv">1</span>])),</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">Second.Mode.Count=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">SecondModes</span>(x)[<span class="dv">1</span>])),</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">Unique.Count.Ratio=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">length</span>(<span class="fu">unique</span>(x))<span class="sc">/</span><span class="fu">nrow</span>(DQA.Descriptors.Factor)),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">First.Second.Mode.Ratio=</span><span class="fu">sapply</span>(DQA.Descriptors.Factor, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">FirstModes</span>(x)[<span class="dv">1</span>])<span class="sc">/</span><span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">SecondModes</span>(x)[<span class="dv">1</span>])),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">NULL</span>)</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>##                Column.Name Column.Type Unique.Count First.Mode.Value
+## 1                 betablok      factor            2                1
+## 2                   dilver      factor            2                0
+## 3                    nifed      factor            2                0
+## 4                     acei      factor            2                1
+## 5              angioten.II      factor            2                0
+## 6               anti.arrhy      factor            2                0
+## 7                anti.coag      factor            2                0
+## 8                  aspirin      factor            2                0
+## 9                  digoxin      factor            2                1
+## 10                nitrates      factor            2                0
+## 11             vasodilator      factor            2                0
+## 12           diuretic.loop      factor            2                1
+## 13       diuretic.thiazide      factor            2                0
+## 14 diuretic.potassium.spar      factor            2                0
+## 15          lipidrx.statin      factor            2                0
+## 16                 insulin      factor            2                0
+## 17       surgery.pacemaker      factor            2                0
+## 18            surgery.cabg      factor            2                0
+## 19             surgery.pci      factor            2                0
+## 20    surgery.aicd.implant      factor            2                0
+## 21                  smknow      factor            2                0
+## 22               q.wave.mi      factor            2                0
+## 23                   niddm      factor            2                0
+## 24                     cad      factor            2                0
+## 25                    died      factor            2                0
+## 26                    male      factor            2                1
+## 27                   black      factor            2                0
+##    Second.Mode.Value First.Mode.Count Second.Mode.Count Unique.Count.Ratio
+## 1                  0             1429               802              0.001
+## 2                  1             2215                16              0.001
+## 3                  1             2132                99              0.001
+## 4                  0             1711               520              0.001
+## 5                  1             1941               290              0.001
+## 6                  1             1722               509              0.001
+## 7                  1             1332               899              0.001
+## 8                  1             1193              1038              0.001
+## 9                  0             1570               661              0.001
+## 10                 1             1492               739              0.001
+## 11                 1             2095               136              0.001
+## 12                 0             1880               351              0.001
+## 13                 1             1952               279              0.001
+## 14                 1             1582               649              0.001
+## 15                 1             1381               850              0.001
+## 16                 1             2016               215              0.001
+## 17                 1             1729               502              0.001
+## 18                 1             1637               594              0.001
+## 19                 1             1755               476              0.001
+## 20                 1             1584               647              0.001
+## 21                 1             1772               459              0.001
+## 22                 1             1952               279              0.001
+## 23                 1             1881               350              0.001
+## 24                 1             1325               906              0.001
+## 25                 1             1505               726              0.001
+## 26                 0             1629               602              0.001
+## 27                 1             1965               266              0.001
+##    First.Second.Mode.Ratio
+## 1                    1.782
+## 2                  138.438
+## 3                   21.535
+## 4                    3.290
+## 5                    6.693
+## 6                    3.383
+## 7                    1.482
+## 8                    1.149
+## 9                    2.375
+## 10                   2.019
+## 11                  15.404
+## 12                   5.356
+## 13                   6.996
+## 14                   2.438
+## 15                   1.625
+## 16                   9.377
+## 17                   3.444
+## 18                   2.756
+## 19                   3.687
+## 20                   2.448
+## 21                   3.861
+## 22                   6.996
+## 23                   5.374
+## 24                   1.462
+## 25                   2.073
+## 26                   2.706
+## 27                   7.387</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Formulating a data quality assessment summary for numeric Descriptors</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Numeric))<span class="sc">&gt;</span><span class="dv">0</span>) {</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Formulating a function to determine the first mode</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  FirstModes <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    ux <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">na.omit</span>(x))</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    tab <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(x, ux))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    ux[tab <span class="sc">==</span> <span class="fu">max</span>(tab)]</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Formulating a function to determine the second mode</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="do">##################################</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  SecondModes <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    ux <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">na.omit</span>(x))</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    tab <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(x, ux))</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    fm <span class="ot">=</span> ux[tab <span class="sc">==</span> <span class="fu">max</span>(tab)]</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    sm <span class="ot">=</span> <span class="fu">na.omit</span>(x)[<span class="sc">!</span>(<span class="fu">na.omit</span>(x) <span class="sc">%in%</span> fm)]</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    usm <span class="ot">&lt;-</span> <span class="fu">unique</span>(sm)</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    tabsm <span class="ot">&lt;-</span> <span class="fu">tabulate</span>(<span class="fu">match</span>(sm, usm))</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">is.na</span>(usm[tabsm <span class="sc">==</span> <span class="fu">max</span>(tabsm)])<span class="sc">==</span><span class="cn">TRUE</span>,</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>           <span class="fu">return</span>(<span class="fl">0.00001</span>),</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>           <span class="fu">return</span>(usm[tabsm <span class="sc">==</span> <span class="fu">max</span>(tabsm)]))</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  (DQA.Descriptors.Numeric.Summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Name=</span> <span class="fu">names</span>(DQA.Descriptors.Numeric),</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column.Type=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">class</span>(x)),</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">Unique.Count=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">length</span>(<span class="fu">unique</span>(x))),</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">Unique.Count.Ratio=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">length</span>(<span class="fu">unique</span>(x))<span class="sc">/</span><span class="fu">nrow</span>(DQA.Descriptors.Numeric)),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">First.Mode.Value=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">FirstModes</span>(x)[<span class="dv">1</span>]),<span class="dv">3</span>),<span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">Second.Mode.Value=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">SecondModes</span>(x)[<span class="dv">1</span>]),<span class="dv">3</span>),<span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">First.Mode.Count=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">FirstModes</span>(x)[<span class="dv">1</span>])),</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">Second.Mode.Count=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">SecondModes</span>(x)[<span class="dv">1</span>])),</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">First.Second.Mode.Ratio=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>((<span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">FirstModes</span>(x)[<span class="dv">1</span>])<span class="sc">/</span><span class="fu">sum</span>(<span class="fu">na.omit</span>(x) <span class="sc">==</span> <span class="fu">SecondModes</span>(x)[<span class="dv">1</span>])),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">Minimum=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">min</span>(x,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mean=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">mean</span>(x,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">Median=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">median</span>(x,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">Maximum=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">max</span>(x,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">Skewness=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">skewness</span>(x,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">Kurtosis=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">kurtosis</span>(x,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">Percentile25th=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">quantile</span>(x,<span class="at">probs=</span><span class="fl">0.25</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">Percentile75th=</span><span class="fu">sapply</span>(DQA.Descriptors.Numeric, <span class="cf">function</span>(x) <span class="fu">format</span>(<span class="fu">round</span>(<span class="fu">quantile</span>(x,<span class="at">probs=</span><span class="fl">0.75</span>,<span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="dv">3</span>), <span class="at">nsmall=</span><span class="dv">3</span>)),</span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names=</span><span class="cn">NULL</span>)</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>##            Column.Name Column.Type Unique.Count Unique.Count.Ratio
+## 1                  age     integer           65              0.029
+## 2  resting.systolic.bp     integer           55              0.025
+## 3           resting.hr     integer           82              0.037
+## 4                  bmi     numeric         2144              0.961
+## 5          lvef.metabl     numeric           38              0.017
+## 6             peak.rer     numeric           75              0.034
+## 7             peak.vo2     numeric          252              0.113
+## 8             interval     integer          594              0.266
+## 9              ttodead     numeric          127              0.057
+## 10                 bun     numeric          936              0.420
+## 11              sodium     numeric          881              0.395
+## 12                 hgb     numeric         1004              0.450
+## 13             glucose     numeric         1060              0.475
+## 14                crcl     numeric         2213              0.992
+##    First.Mode.Value Second.Mode.Value First.Mode.Count Second.Mode.Count
+## 1            55.000            60.000               94                90
+## 2           110.000           100.000              174               173
+## 3            70.000            75.000               87                81
+## 4            27.070            25.417                3                 2
+## 5            20.000            15.000              565               529
+## 6             1.100             1.120              173               157
+## 7            14.800            16.000               28                25
+## 8           480.000           600.000              146               129
+## 9            14.000            96.000               30                29
+## 10           18.000            14.000               78                76
+## 11          139.000           140.000              173               163
+## 12           13.500            14.300               45                34
+## 13           94.000            87.000               40                34
+## 14           94.444           104.833                3                 2
+##    First.Second.Mode.Ratio Minimum    Mean  Median  Maximum Skewness Kurtosis
+## 1                    1.044  18.000  54.223  55.000   82.000   -0.428    3.045
+## 2                    1.006  80.000 110.509 110.000  184.000    0.650    3.336
+## 3                    1.074  39.000  76.182  75.000  124.000    0.352    2.887
+## 4                    1.500  14.183  28.499  27.777   59.616    0.782    4.113
+## 5                    1.068   5.000  20.261  20.000   40.000    0.655    3.067
+## 6                    1.102   0.079   1.079   1.100    1.800   -1.490   12.741
+## 7                    1.120   4.200  16.275  15.700   43.800    0.732    4.113
+## 8                    1.132  21.000 503.255 480.000 1415.000    0.514    3.219
+## 9                    1.034   1.000  62.750  62.000  127.000    0.049    1.771
+## 10                   1.026   4.322  25.278  23.000  129.000    2.250   11.535
+## 11                   1.061 120.000 139.451 139.804  152.000   -0.834    7.204
+## 12                   1.324   7.200  13.542  13.585   19.200   -0.395    4.308
+## 13                   1.176  37.000 109.352  96.929  424.000    2.814   13.907
+## 14                   1.500   5.760  90.709  83.131  385.841    1.453    6.734
+##    Percentile25th Percentile75th
+## 1          48.000         62.000
+## 2          98.000        122.000
+## 3          66.000         86.000
+## 4          24.523         31.888
+## 5          15.000         25.000
+## 6           1.020          1.140
+## 7          12.800         19.300
+## 8         345.000        641.000
+## 9          30.000         95.000
+## 10         17.000         29.334
+## 11        138.000        141.000
+## 12         12.803         14.400
+## 13         87.000        114.880
+## 14         60.935        110.333</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Identifying potential data quality issues</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for missing observations</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ((<span class="fu">nrow</span>(DQA.Summary[DQA.Summary<span class="sc">$</span>NA.Count<span class="sc">&gt;</span><span class="dv">0</span>,]))<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Missing observations noted for &quot;</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>               (<span class="fu">nrow</span>(DQA.Summary[DQA.Summary<span class="sc">$</span>NA.Count<span class="sc">&gt;</span><span class="dv">0</span>,])),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot; variable(s) with NA.Count&gt;0 and Fill.Rate&lt;1.0.&quot;</span>))</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  DQA.Summary[DQA.Summary<span class="sc">$</span>NA.Count<span class="sc">&gt;</span><span class="dv">0</span>,]</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No missing observations noted.&quot;</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;No missing observations noted.&quot;</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for zero or near-zero variance Descriptors</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Factor))<span class="sc">==</span><span class="dv">0</span>) {</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No factor descriptors noted.&quot;</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">nrow</span>(DQA.Descriptors.Factor.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Factor.Summary<span class="sc">$</span>First.Second.Mode.Ratio))<span class="sc">&gt;</span><span class="dv">5</span>,])<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Low variance observed for &quot;</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>               (<span class="fu">nrow</span>(DQA.Descriptors.Factor.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Factor.Summary<span class="sc">$</span>First.Second.Mode.Ratio))<span class="sc">&gt;</span><span class="dv">5</span>,])),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot; factor variable(s) with First.Second.Mode.Ratio&gt;5.&quot;</span>))</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  DQA.Descriptors.Factor.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Factor.Summary<span class="sc">$</span>First.Second.Mode.Ratio))<span class="sc">&gt;</span><span class="dv">5</span>,]</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No low variance factor descriptors due to high first-second mode ratio noted.&quot;</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;Low variance observed for 10 factor variable(s) with First.Second.Mode.Ratio&gt;5.&quot;</code></pre>
+<pre><code>##          Column.Name Column.Type Unique.Count First.Mode.Value
+## 2             dilver      factor            2                0
+## 3              nifed      factor            2                0
+## 5        angioten.II      factor            2                0
+## 11       vasodilator      factor            2                0
+## 12     diuretic.loop      factor            2                1
+## 13 diuretic.thiazide      factor            2                0
+## 16           insulin      factor            2                0
+## 22         q.wave.mi      factor            2                0
+## 23             niddm      factor            2                0
+## 27             black      factor            2                0
+##    Second.Mode.Value First.Mode.Count Second.Mode.Count Unique.Count.Ratio
+## 2                  1             2215                16              0.001
+## 3                  1             2132                99              0.001
+## 5                  1             1941               290              0.001
+## 11                 1             2095               136              0.001
+## 12                 0             1880               351              0.001
+## 13                 1             1952               279              0.001
+## 16                 1             2016               215              0.001
+## 22                 1             1952               279              0.001
+## 23                 1             1881               350              0.001
+## 27                 1             1965               266              0.001
+##    First.Second.Mode.Ratio
+## 2                  138.438
+## 3                   21.535
+## 5                    6.693
+## 11                  15.404
+## 12                   5.356
+## 13                   6.996
+## 16                   9.377
+## 22                   6.996
+## 23                   5.374
+## 27                   7.387</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Numeric))<span class="sc">==</span><span class="dv">0</span>) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No numeric descriptors noted.&quot;</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">nrow</span>(DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>First.Second.Mode.Ratio))<span class="sc">&gt;</span><span class="dv">5</span>,])<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Low variance observed for &quot;</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>               (<span class="fu">nrow</span>(DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>First.Second.Mode.Ratio))<span class="sc">&gt;</span><span class="dv">5</span>,])),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot; numeric variable(s) with First.Second.Mode.Ratio&gt;5.&quot;</span>))</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>First.Second.Mode.Ratio))<span class="sc">&gt;</span><span class="dv">5</span>,]</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No low variance numeric descriptors due to high first-second mode ratio noted.&quot;</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;No low variance numeric descriptors due to high first-second mode ratio noted.&quot;</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Numeric))<span class="sc">==</span><span class="dv">0</span>) {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No numeric descriptors noted.&quot;</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">nrow</span>(DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Unique.Count.Ratio))<span class="sc">&lt;</span><span class="fl">0.01</span>,])<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;Low variance observed for &quot;</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>               (<span class="fu">nrow</span>(DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Unique.Count.Ratio))<span class="sc">&lt;</span><span class="fl">0.01</span>,])),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">&quot; numeric variable(s) with Unique.Count.Ratio&lt;0.01.&quot;</span>))</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Unique.Count.Ratio))<span class="sc">&lt;</span><span class="fl">0.01</span>,]</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No low variance numeric descriptors due to low unique count ratio noted.&quot;</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;No low variance numeric descriptors due to low unique count ratio noted.&quot;</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for skewed Descriptors</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(<span class="fu">names</span>(DQA.Descriptors.Numeric))<span class="sc">==</span><span class="dv">0</span>) {</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No numeric descriptors noted.&quot;</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">nrow</span>(DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Skewness))<span class="sc">&gt;</span><span class="dv">3</span> <span class="sc">|</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                                               <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Skewness))<span class="sc">&lt;</span>(<span class="sc">-</span><span class="dv">3</span>),])<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">&quot;High skewness observed for &quot;</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">nrow</span>(DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Skewness))<span class="sc">&gt;</span><span class="dv">3</span> <span class="sc">|</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                                               <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Skewness))<span class="sc">&lt;</span>(<span class="sc">-</span><span class="dv">3</span>),])),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot; numeric variable(s) with Skewness&gt;3 or Skewness&lt;(-3).&quot;</span>))</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  DQA.Descriptors.Numeric.Summary[<span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Skewness))<span class="sc">&gt;</span><span class="dv">3</span> <span class="sc">|</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(DQA.Descriptors.Numeric.Summary<span class="sc">$</span>Skewness))<span class="sc">&lt;</span>(<span class="sc">-</span><span class="dv">3</span>),]</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;No skewed numeric descriptors noted.&quot;</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## [1] &quot;No skewed numeric descriptors noted.&quot;</code></pre>
 </details>
 </div>
 <div id="data-preprocessing" class="section level2">

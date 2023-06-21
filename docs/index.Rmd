@@ -118,11 +118,244 @@ PDA <- peakVO2
 
 ##  1.2 Data Quality Assessment
 |
+| Data quality assessment:
+|
+| **[A]** No missing observations noted for any variable.
+|
+| **[B]** Low variance observed for 10 variables with First.Second.Mode.Ratio>5.
+|      **[B.1]** <span style="color: #FF0000">dilver</span> variable (factor)
+|      **[B.2]** <span style="color: #FF0000">nifed</span> variable (factor)
+|      **[B.3]** <span style="color: #FF0000">angioten.II</span> variable (factor)
+|      **[B.4]** <span style="color: #FF0000">vasodilator</span> variable (factor)
+|      **[B.5]** <span style="color: #FF0000">diuretic.loop</span> variable (factor)
+|      **[B.6]** <span style="color: #FF0000">diuretic.thiazide</span> variable (factor)
+|      **[B.7]** <span style="color: #FF0000">insulin</span> variable (factor)
+|      **[B.8]** <span style="color: #FF0000">q.wave.mi</span> variable (factor)
+|      **[B.9]** <span style="color: #FF0000">niddm</span> variable (factor)
+|      **[B.10]** <span style="color: #FF0000">black</span> variable (factor)
+|
+| **[C]** No low variance observed for any variable with Unique.Count.Ratio<0.01.
+|
+| **[D]** No high skewness observed for any variable with Skewness>3 or Skewness<(-3).
+|
 |
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.2, warning=FALSE, message=FALSE}
+##################################
+# Loading dataset
+##################################
+DQA <- peakVO2
+
+##################################
+# Formulating an overall data quality assessment summary
+##################################
+(DQA.Summary <- data.frame(
+  Column.Index=c(1:length(names(DQA))),
+  Column.Name= names(DQA),
+  Column.Type=sapply(DQA, function(x) class(x)),
+  Row.Count=sapply(DQA, function(x) nrow(DQA)),
+  NA.Count=sapply(DQA,function(x)sum(is.na(x))),
+  Fill.Rate=sapply(DQA,function(x)format(round((sum(!is.na(x))/nrow(DQA)),3),nsmall=3)),
+  row.names=NULL)
+)
+
+##################################
+# Listing all descriptors
+##################################
+DQA.Descriptors <- DQA
+
+##################################
+# Listing all numeric Descriptors
+##################################
+DQA.Descriptors.Numeric <- DQA.Descriptors[,sapply(DQA.Descriptors, is.numeric)]
+
+if (length(names(DQA.Descriptors.Numeric))>0) {
+    print(paste0("There are ",
+               (length(names(DQA.Descriptors.Numeric))),
+               " numeric descriptor variable(s)."))
+} else {
+  print("There are no numeric descriptor variables.")
+}
+
+##################################
+# Listing all factor Descriptors
+##################################
+DQA.Descriptors.Factor <- DQA.Descriptors[,sapply(DQA.Descriptors, is.factor)]
+
+if (length(names(DQA.Descriptors.Factor))>0) {
+    print(paste0("There are ",
+               (length(names(DQA.Descriptors.Factor))),
+               " factor descriptor variable(s)."))
+} else {
+  print("There are no factor descriptor variables.")
+}
+
+##################################
+# Formulating a data quality assessment summary for factor Descriptors
+##################################
+if (length(names(DQA.Descriptors.Factor))>0) {
+
+  ##################################
+  # Formulating a function to determine the first mode
+  ##################################
+  FirstModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    ux[tab == max(tab)]
+  }
+
+  ##################################
+  # Formulating a function to determine the second mode
+  ##################################
+  SecondModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    fm = ux[tab == max(tab)]
+    sm = x[!(x %in% fm)]
+    usm <- unique(sm)
+    tabsm <- tabulate(match(sm, usm))
+    ifelse(is.na(usm[tabsm == max(tabsm)])==TRUE,
+           return("x"),
+           return(usm[tabsm == max(tabsm)]))
+  }
+
+  (DQA.Descriptors.Factor.Summary <- data.frame(
+  Column.Name= names(DQA.Descriptors.Factor),
+  Column.Type=sapply(DQA.Descriptors.Factor, function(x) class(x)),
+  Unique.Count=sapply(DQA.Descriptors.Factor, function(x) length(unique(x))),
+  First.Mode.Value=sapply(DQA.Descriptors.Factor, function(x) as.character(FirstModes(x)[1])),
+  Second.Mode.Value=sapply(DQA.Descriptors.Factor, function(x) as.character(SecondModes(x)[1])),
+  First.Mode.Count=sapply(DQA.Descriptors.Factor, function(x) sum(na.omit(x) == FirstModes(x)[1])),
+  Second.Mode.Count=sapply(DQA.Descriptors.Factor, function(x) sum(na.omit(x) == SecondModes(x)[1])),
+  Unique.Count.Ratio=sapply(DQA.Descriptors.Factor, function(x) format(round((length(unique(x))/nrow(DQA.Descriptors.Factor)),3), nsmall=3)),
+  First.Second.Mode.Ratio=sapply(DQA.Descriptors.Factor, function(x) format(round((sum(na.omit(x) == FirstModes(x)[1])/sum(na.omit(x) == SecondModes(x)[1])),3), nsmall=3)),
+  row.names=NULL)
+  )
+
+}
+
+##################################
+# Formulating a data quality assessment summary for numeric Descriptors
+##################################
+if (length(names(DQA.Descriptors.Numeric))>0) {
+
+  ##################################
+  # Formulating a function to determine the first mode
+  ##################################
+  FirstModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    ux[tab == max(tab)]
+  }
+
+  ##################################
+  # Formulating a function to determine the second mode
+  ##################################
+  SecondModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    fm = ux[tab == max(tab)]
+    sm = na.omit(x)[!(na.omit(x) %in% fm)]
+    usm <- unique(sm)
+    tabsm <- tabulate(match(sm, usm))
+    ifelse(is.na(usm[tabsm == max(tabsm)])==TRUE,
+           return(0.00001),
+           return(usm[tabsm == max(tabsm)]))
+  }
+
+  (DQA.Descriptors.Numeric.Summary <- data.frame(
+  Column.Name= names(DQA.Descriptors.Numeric),
+  Column.Type=sapply(DQA.Descriptors.Numeric, function(x) class(x)),
+  Unique.Count=sapply(DQA.Descriptors.Numeric, function(x) length(unique(x))),
+  Unique.Count.Ratio=sapply(DQA.Descriptors.Numeric, function(x) format(round((length(unique(x))/nrow(DQA.Descriptors.Numeric)),3), nsmall=3)),
+  First.Mode.Value=sapply(DQA.Descriptors.Numeric, function(x) format(round((FirstModes(x)[1]),3),nsmall=3)),
+  Second.Mode.Value=sapply(DQA.Descriptors.Numeric, function(x) format(round((SecondModes(x)[1]),3),nsmall=3)),
+  First.Mode.Count=sapply(DQA.Descriptors.Numeric, function(x) sum(na.omit(x) == FirstModes(x)[1])),
+  Second.Mode.Count=sapply(DQA.Descriptors.Numeric, function(x) sum(na.omit(x) == SecondModes(x)[1])),
+  First.Second.Mode.Ratio=sapply(DQA.Descriptors.Numeric, function(x) format(round((sum(na.omit(x) == FirstModes(x)[1])/sum(na.omit(x) == SecondModes(x)[1])),3), nsmall=3)),
+  Minimum=sapply(DQA.Descriptors.Numeric, function(x) format(round(min(x,na.rm = TRUE),3), nsmall=3)),
+  Mean=sapply(DQA.Descriptors.Numeric, function(x) format(round(mean(x,na.rm = TRUE),3), nsmall=3)),
+  Median=sapply(DQA.Descriptors.Numeric, function(x) format(round(median(x,na.rm = TRUE),3), nsmall=3)),
+  Maximum=sapply(DQA.Descriptors.Numeric, function(x) format(round(max(x,na.rm = TRUE),3), nsmall=3)),
+  Skewness=sapply(DQA.Descriptors.Numeric, function(x) format(round(skewness(x,na.rm = TRUE),3), nsmall=3)),
+  Kurtosis=sapply(DQA.Descriptors.Numeric, function(x) format(round(kurtosis(x,na.rm = TRUE),3), nsmall=3)),
+  Percentile25th=sapply(DQA.Descriptors.Numeric, function(x) format(round(quantile(x,probs=0.25,na.rm = TRUE),3), nsmall=3)),
+  Percentile75th=sapply(DQA.Descriptors.Numeric, function(x) format(round(quantile(x,probs=0.75,na.rm = TRUE),3), nsmall=3)),
+  row.names=NULL)
+  )
+
+}
+
+##################################
+# Identifying potential data quality issues
+##################################
+
+##################################
+# Checking for missing observations
+##################################
+if ((nrow(DQA.Summary[DQA.Summary$NA.Count>0,]))>0){
+  print(paste0("Missing observations noted for ",
+               (nrow(DQA.Summary[DQA.Summary$NA.Count>0,])),
+               " variable(s) with NA.Count>0 and Fill.Rate<1.0."))
+  DQA.Summary[DQA.Summary$NA.Count>0,]
+} else {
+  print("No missing observations noted.")
+}
+
+##################################
+# Checking for zero or near-zero variance Descriptors
+##################################
+if (length(names(DQA.Descriptors.Factor))==0) {
+  print("No factor descriptors noted.")
+} else if (nrow(DQA.Descriptors.Factor.Summary[as.numeric(as.character(DQA.Descriptors.Factor.Summary$First.Second.Mode.Ratio))>5,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Descriptors.Factor.Summary[as.numeric(as.character(DQA.Descriptors.Factor.Summary$First.Second.Mode.Ratio))>5,])),
+               " factor variable(s) with First.Second.Mode.Ratio>5."))
+  DQA.Descriptors.Factor.Summary[as.numeric(as.character(DQA.Descriptors.Factor.Summary$First.Second.Mode.Ratio))>5,]
+} else {
+  print("No low variance factor descriptors due to high first-second mode ratio noted.")
+}
+
+if (length(names(DQA.Descriptors.Numeric))==0) {
+  print("No numeric descriptors noted.")
+} else if (nrow(DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$First.Second.Mode.Ratio))>5,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$First.Second.Mode.Ratio))>5,])),
+               " numeric variable(s) with First.Second.Mode.Ratio>5."))
+  DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$First.Second.Mode.Ratio))>5,]
+} else {
+  print("No low variance numeric descriptors due to high first-second mode ratio noted.")
+}
+
+if (length(names(DQA.Descriptors.Numeric))==0) {
+  print("No numeric descriptors noted.")
+} else if (nrow(DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Unique.Count.Ratio))<0.01,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Unique.Count.Ratio))<0.01,])),
+               " numeric variable(s) with Unique.Count.Ratio<0.01."))
+  DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Unique.Count.Ratio))<0.01,]
+} else {
+  print("No low variance numeric descriptors due to low unique count ratio noted.")
+}
+
+##################################
+# Checking for skewed Descriptors
+##################################
+if (length(names(DQA.Descriptors.Numeric))==0) {
+  print("No numeric descriptors noted.")
+} else if (nrow(DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Skewness))>3 |
+                                               as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Skewness))<(-3),])>0){
+  print(paste0("High skewness observed for ",
+  (nrow(DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Skewness))>3 |
+                                               as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Skewness))<(-3),])),
+  " numeric variable(s) with Skewness>3 or Skewness<(-3)."))
+  DQA.Descriptors.Numeric.Summary[as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Skewness))>3 |
+                                 as.numeric(as.character(DQA.Descriptors.Numeric.Summary$Skewness))<(-3),]
+} else {
+  print("No skewed numeric descriptors noted.")
+}
 
 ```
 
