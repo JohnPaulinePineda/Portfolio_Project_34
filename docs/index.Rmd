@@ -1386,9 +1386,19 @@ arrange_ggsurvplots(KMPlot_List,
 | **[Article]** [Survival Analysis with R](https://rviews.rstudio.com/2017/09/25/survival-analysis-with-r/) by Joseph Rickert
 | **[Article]** [Cox Model Assumptions](http://www.sthda.com/english/wiki/cox-model-assumptions#testing-non-linearity) by Alboukadel Kassambara
 | **[Article]** [Understanding Predictions in Survival Analysis](https://scikit-survival.readthedocs.io/en/stable/user_guide/understanding_predictions.html) by Scikit Team
+| **[Article]** [Regularization in R Tutorial: Ridge, Lasso and Elastic Net](https://www.datacamp.com/tutorial/tutorial-ridge-lasso-elastic-net) by Datacamp Team
+| **[Article]** [Penalized Regression Essentials: Ridge, Lasso & Elastic Net](http://sthda.com/english/articles/37-model-selection-essentials-in-r/153-penalized-regression-essentials-ridge-lasso-elastic-net) by STHDA Team
+| **[Article]** [Lasso vs Ridge vs Elastic Net | ML](https://www.geeksforgeeks.org/lasso-vs-ridge-vs-elastic-net-ml/) by Geeks for Geeks Team
+| **[Article]** [Lasso Regression Explained, Step by Step](https://machinelearningcompass.com/machine_learning_models/lasso_regression/) by Boris Giba
+| **[Article]** [How to Develop LASSO Regression Models in Python](https://machinelearningmastery.com/lasso-regression-with-python/) by Jason Brownlee
+| **[Article]** [Introduction to Lasso Regression](https://www.statology.org/lasso-regression/) by Statology Team
+| **[Article]** [Elastic Net Regression Explained, Step by Step](https://machinelearningcompass.com/machine_learning_models/elastic_net_regression/) by Boris Giba
+| **[Article]** [How to Develop Elastic Net Regression Models in Python](https://machinelearningmastery.com/elastic-net-regression-in-python/) by Jason Brownlee
 | **[Publication]** [Survival Analysis Part I: Basic Concepts and First Analyses](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394262/) by Taane Clark (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part II: Multivariate Data Analysis – An Introduction to Concepts and Methods](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394368/) by Mike Bradburn (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part III: Multivariate Data Analysis – Choosing a Model and Assessing its Adequacy and Fit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2376927/) by Mike Bradburn (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part IV: Further Concepts and Methods in Survival Analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394469/) by Taane Clark (British Journal of Cancer)
 | **[Publication]** [Regression Models and Life-Tables](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1972.tb00899.x) by David Cox (Royal Statistical Society)
+| **[Publication]** [Regression Shrinkage and Selection Via the Lasso](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) by Rob Tibshirani (Journal of the Royal Statistical Society)
+| **[Publication]** [Regularization and Variable Selection via the Elastic Net](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) by Hui Zou and Trevor Hastie (Journal of the Royal Statistical Society)
 | **[Tutorial]** [Survival Analysis / Time-To-Event Analysis in R](https://campus.datacamp.com/courses/survival-analysis-in-r/what-is-survival-analysis?ex=1) by Heidi Seibold (Datacamp)
