@@ -1375,6 +1375,12 @@ arrange_ggsurvplots(KMPlot_List,
 | **[R Package]** [randomForestSRC](https://cran.r-project.org/web/packages/randomForestSRC/randomForestSRC.pdf) by Hemant Ishwaran and Udaya Kogalur
 | **[R Package]** [pec](https://cran.r-project.org/web/packages/pec/pec.pdf) by Thomas Gerds
 | **[R Package]** [hdnom](https://cran.r-project.org/web/packages/hdnom/hdnom.pdf) by Nan Xiao
+| **[Article]** [An Introduction to hdnom](https://cran.r-project.org/web/packages/hdnom/vignettes/hdnom.html) by Nan Xiao
+| **[Article]** [Penalized Cox Models](https://scikit-survival.readthedocs.io/en/stable/user_guide/coxnet.html) by Scikit Survival Team
+| **[Article]** [Regularized Cox Regression](https://glmnet.stanford.edu/articles/Coxnet.html) by Kenneth Tay, Noah Simon, Jerome Friedman, Trevor Hastie, Rob Tibshirani and Balasubramanian Narasimhan
+| **[Article]** [An Introduction to hdnom](https://cran.r-project.org/web/packages/hdnom/vignettes/hdnom.html) by Nan Xiao
+| **[Article]** [An Introduction to hdnom](https://cran.r-project.org/web/packages/hdnom/vignettes/hdnom.html) by Nan Xiao
+| **[Article]** [An Introduction to hdnom](https://cran.r-project.org/web/packages/hdnom/vignettes/hdnom.html) by Nan Xiao
 | **[Article]** [Predictive Evaluation Metrics in Survival Analysis](https://cran.r-project.org/web/packages/SurvMetrics/vignettes/SurvMetrics-vignette.html) by Zhou Hanpu
 | **[Article]** [Survival Analysis](https://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/BS704_Survival/index.html) by Lisa Sullivan
 | **[Article]** [Survival Analysis in R](https://www.emilyzabor.com/tutorials/survival_analysis_in_r_tutorial.html) by Emily Zabor
