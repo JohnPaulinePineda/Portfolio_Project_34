@@ -1345,4 +1345,50 @@ arrange_ggsurvplots(KMPlot_List,
 
 
 # **2. References**
-
+|
+| **[Book]** [Clinical Prediction Models](http://clinicalpredictionmodels.org/) by Ewout Steyerberg
+| **[Book]** [Survival Analysis: A Self-Learning Text](https://link.springer.com/book/10.1007/978-1-4419-6646-9/) by David Kleinbaum and Mitchel Klein
+| **[Book]** [Applied Survival Analysis Using R](https://link.springer.com/book/10.1007/978-3-319-31245-3/) by Dirk Moore
+| **[Book]** [Regression Modeling Strategies](https://link.springer.com/book/10.1007/978-3-319-19425-7/) by Frank Harrell
+| **[Book]** [R for Health Data Science](https://argoshare.is.ed.ac.uk/healthyr_book/) by Ewen Harrison and Riinu Pius
+| **[Book]** [Supervised Machine Learning](https://bookdown.org/mpfoley1973/supervised-ml/) by Michael Foley
+| **[Book]** [Data Science for Biological, Medical and Health Research](https://thomaselove.github.io/432-notes/index.html) by Thomas Love
+| **[R Package]** [survival](https://cran.microsoft.com/snapshot/2022-04-01/web/packages/survival/index.html/) by Terry Therneau
+| **[R Package]** [survminer](https://cran.r-project.org/web/packages/survminer/index.html/) by Alboukadel Kassambara
+| **[R Package]** [mice](https://www.gerkovink.com/miceVignettes/) by Gerko Vink and Stef van Buuren
+| **[R Package]** [foreign](https://cran.r-project.org/web/packages/foreign/index.html/) by R Core Team
+| **[R Package]** [rms](https://cran.r-project.org/web/packages/rms/index.html/) by Frank Harrell
+| **[R Package]** [Hmisc](https://cran.r-project.org/web/packages/Hmisc//) by Frank Harrell and Charles Dupont
+| **[R Package]** [VIM](https://cran.r-project.org/web/packages/VIM/index.html/) by Matthias Templ
+| **[R Package]** [gridExtra](https://cran.microsoft.com/snapshot/2017-08-01/web/packages/gridExtra/index.html/) by Baptiste Auguie
+| **[R Package]** [finalfit](https://cran.r-project.org/web/packages/finalfit/index.html/) by Ewen Harrison
+| **[R Package]** [knitr](https://cran.r-project.org/web/packages/knitr/index.html/) by Yihui Xie
+| **[R Package]** [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html/) by Hadley Wickham
+| **[R Package]** [gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html/) by Daniel Sjoberg
+| **[R Package]** [tidyr](https://cran.r-project.org/web/packages/tidyr/index.html/) by Hadley Wickham
+| **[R Package]** [purrr](https://cran.r-project.org/web/packages/purrr//) by Lionel Henry
+| **[R Package]** [moments](https://cran.r-project.org/web/packages/moments/index.html) by Lukasz Komsta and Frederick Novomestky
+| **[R Package]** [skimr](https://cran.r-project.org/web/packages/skimr/skimr.pdf) by  Elin Waring
+| **[R Package]** [caret](https://topepo.github.io/caret/index.html) by Max Kuhn
+| **[R Package]** [corrplot](https://cran.r-project.org/web/packages/corrplot/corrplot.pdf) by Taiyun Wei
+| **[R Package]** [SurvMetrics](https://cran.r-project.org/web/packages/SurvMetrics/SurvMetrics.pdf) by Hanpu Zhou
+| **[R Package]** [randomForestSRC](https://cran.r-project.org/web/packages/randomForestSRC/randomForestSRC.pdf) by Hemant Ishwaran and Udaya Kogalur
+| **[R Package]** [pec](https://cran.r-project.org/web/packages/pec/pec.pdf) by Thomas Gerds
+| **[R Package]** [hdnom](https://cran.r-project.org/web/packages/hdnom/hdnom.pdf) by Nan Xiao
+| **[Article]** [Predictive Evaluation Metrics in Survival Analysis](https://cran.r-project.org/web/packages/SurvMetrics/vignettes/SurvMetrics-vignette.html) by Zhou Hanpu
+| **[Article]** [Survival Analysis](https://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/BS704_Survival/index.html) by Lisa Sullivan
+| **[Article]** [Survival Analysis in R](https://www.emilyzabor.com/tutorials/survival_analysis_in_r_tutorial.html) by Emily Zabor
+| **[Article]** [Assessment of Discrimination in Survival Analysis](https://rstudio-pubs-static.s3.amazonaws.com/3506_36a9509e9d544386bd3e69de30bca608.html) by R-Studio Team
+| **[Article]** [Cox Proportional-Hazards Regression](https://www.medcalc.org/manual/cox-regression.php) by MedCalc Team
+| **[Article]** [Cox Proportional-Hazards Model](https://rstudio-pubs-static.s3.amazonaws.com/3506_36a9509e9d544386bd3e69de30bca608.html) by R Studio Team
+| **[Article]** [Exploring Time To Event / Survival Data](https://thomaselove.github.io/432-notes/exploring-time-to-event-survival-data.html) by Thomas Love
+| **[Article]** [Survival Analysis](http://www.sthda.com/english/wiki/survival-analysis) by Alboukadel Kassambara
+| **[Article]** [Survival Analysis with R](https://rviews.rstudio.com/2017/09/25/survival-analysis-with-r/) by Joseph Rickert
+| **[Article]** [Cox Model Assumptions](http://www.sthda.com/english/wiki/cox-model-assumptions#testing-non-linearity) by Alboukadel Kassambara
+| **[Article]** [Understanding Predictions in Survival Analysis](https://scikit-survival.readthedocs.io/en/stable/user_guide/understanding_predictions.html) by Scikit Team
+| **[Publication]** [Survival Analysis Part I: Basic Concepts and First Analyses](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394262/) by Taane Clark (British Journal of Cancer)
+| **[Publication]** [Survival Analysis Part II: Multivariate Data Analysis – An Introduction to Concepts and Methods](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394368/) by Mike Bradburn (British Journal of Cancer)
+| **[Publication]** [Survival Analysis Part III: Multivariate Data Analysis – Choosing a Model and Assessing its Adequacy and Fit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2376927/) by Mike Bradburn (British Journal of Cancer)
+| **[Publication]** [Survival Analysis Part IV: Further Concepts and Methods in Survival Analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394469/) by Taane Clark (British Journal of Cancer)
+| **[Publication]** [Regression Models and Life-Tables](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1972.tb00899.x) by David Cox (Royal Statistical Society)
+| **[Tutorial]** [Survival Analysis / Time-To-Event Analysis in R](https://campus.datacamp.com/courses/survival-analysis-in-r/what-is-survival-analysis?ex=1) by Heidi Seibold (Datacamp)
