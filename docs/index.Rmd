@@ -1375,6 +1375,7 @@ arrange_ggsurvplots(KMPlot_List,
 | **[R Package]** [randomForestSRC](https://cran.r-project.org/web/packages/randomForestSRC/randomForestSRC.pdf) by Hemant Ishwaran and Udaya Kogalur
 | **[R Package]** [pec](https://cran.r-project.org/web/packages/pec/pec.pdf) by Thomas Gerds
 | **[R Package]** [hdnom](https://cran.r-project.org/web/packages/hdnom/hdnom.pdf) by Nan Xiao
+| **[R Package]** [ncvreg](https://cran.r-project.org/web/packages/ncvreg/ncvreg.pdf) by Patrick Breheny
 | **[Article]** [An Introduction to hdnom](https://cran.r-project.org/web/packages/hdnom/vignettes/hdnom.html) by Nan Xiao
 | **[Article]** [Penalized Cox Models](https://scikit-survival.readthedocs.io/en/stable/user_guide/coxnet.html) by Scikit Survival Team
 | **[Article]** [Regularized Cox Regression](https://glmnet.stanford.edu/articles/Coxnet.html) by Kenneth Tay, Noah Simon, Jerome Friedman, Trevor Hastie, Rob Tibshirani and Balasubramanian Narasimhan
@@ -1402,6 +1403,7 @@ arrange_ggsurvplots(KMPlot_List,
 | **[Article]** [How to Develop Elastic Net Regression Models in Python](https://machinelearningmastery.com/elastic-net-regression-in-python/) by Jason Brownlee
 | **[Article]** [Adaptive Lasso: What It Is and How to Implement in R](https://ricardocarvalho.ca/post/lasso/) by Ricardo Carvalho
 | **[Article]** [L1 Penalization: The Lasso and Adaptive Lasso](http://www.personal.psu.edu/lxx6/Lasso.pdf) by Justin Petrovich
+| **[Article]** [Fused Lasso](https://myweb.uiowa.edu/pbreheny/7240/s19/notes/5-01.pdf) by Patrick Breheny
 | **[Publication]** [Survival Analysis Part I: Basic Concepts and First Analyses](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394262/) by Taane Clark (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part II: Multivariate Data Analysis – An Introduction to Concepts and Methods](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394368/) by Mike Bradburn (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part III: Multivariate Data Analysis – Choosing a Model and Assessing its Adequacy and Fit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2376927/) by Mike Bradburn (British Journal of Cancer)
@@ -1412,4 +1414,7 @@ arrange_ggsurvplots(KMPlot_List,
 | **[Publication]** [Regularization and Variable Selection via the Elastic Net](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) by Hui Zou and Trevor Hastie (Journal of the Royal Statistical Society)
 | **[Publication]** [On The Adaptive Elastic-Net With a Diverging Number of Parameters](https://pubmed.ncbi.nlm.nih.gov/20445770/) by Hui Zou and Hao Helen Zhang (Annals of Statistics)
 | **[Publication]** [Adaptive Elastic Net Method for Cox Model](https://arxiv.org/abs/1507.06371) by Chunhong Li, Xinxing Wei and Hongshuai Dai (arXiv e-prints)
+| **[Publication]** [Coordinate Descent Algorithms for Non-Convex Penalized Regression with Applications to Biological Feature Selection](https://pubmed.ncbi.nlm.nih.gov/22081779/) by Patrick Breheny and Jian Huang (The Annals of Applied Statistics)
+| **[Publication]** [Regularization Paths for Cox's Proportional Hazards Model via Coordinate Descent](https://pubmed.ncbi.nlm.nih.gov/27065756/) by Noah Simon, Jerome Friedman, Trevor Hastie and Rob Tibshirani (Journal of Statistical Software)
+| **[Publication]** [Sparsity and Smoothness via the Fused Lasso](https://www.jstor.org/stable/3647602) by Robert Tibshirani, Michael Saunders, Saharon Rosset, Ji Zhu and Keith Knight (Journal of the Royal Statistical Society)
 | **[Tutorial]** [Survival Analysis / Time-To-Event Analysis in R](https://campus.datacamp.com/courses/survival-analysis-in-r/what-is-survival-analysis?ex=1) by Heidi Seibold (Datacamp)
