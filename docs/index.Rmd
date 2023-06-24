@@ -1400,11 +1400,16 @@ arrange_ggsurvplots(KMPlot_List,
 | **[Article]** [Introduction to Lasso Regression](https://www.statology.org/lasso-regression/) by Statology Team
 | **[Article]** [Elastic Net Regression Explained, Step by Step](https://machinelearningcompass.com/machine_learning_models/elastic_net_regression/) by Boris Giba
 | **[Article]** [How to Develop Elastic Net Regression Models in Python](https://machinelearningmastery.com/elastic-net-regression-in-python/) by Jason Brownlee
+| **[Article]** [Adaptive Lasso: What It Is and How to Implement in R](https://ricardocarvalho.ca/post/lasso/) by Ricardo Carvalho
+| **[Article]** [L1 Penalization: The Lasso and Adaptive Lasso](http://www.personal.psu.edu/lxx6/Lasso.pdf) by Justin Petrovich
 | **[Publication]** [Survival Analysis Part I: Basic Concepts and First Analyses](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394262/) by Taane Clark (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part II: Multivariate Data Analysis – An Introduction to Concepts and Methods](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394368/) by Mike Bradburn (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part III: Multivariate Data Analysis – Choosing a Model and Assessing its Adequacy and Fit](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2376927/) by Mike Bradburn (British Journal of Cancer)
 | **[Publication]** [Survival Analysis Part IV: Further Concepts and Methods in Survival Analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2394469/) by Taane Clark (British Journal of Cancer)
 | **[Publication]** [Regression Models and Life-Tables](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1972.tb00899.x) by David Cox (Royal Statistical Society)
 | **[Publication]** [Regression Shrinkage and Selection Via the Lasso](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) by Rob Tibshirani (Journal of the Royal Statistical Society)
+| **[Publication]** [The Adaptive Lasso and Its Oracle Properties](https://www.tandfonline.com/doi/pdf/10.1198/016214506000000735) by Hui Zou (Journal of the American Statistical Association)
 | **[Publication]** [Regularization and Variable Selection via the Elastic Net](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) by Hui Zou and Trevor Hastie (Journal of the Royal Statistical Society)
+| **[Publication]** [On The Adaptive Elastic-Net With a Diverging Number of Parameters](https://pubmed.ncbi.nlm.nih.gov/20445770/) by Hui Zou and Hao Helen Zhang (Annals of Statistics)
+| **[Publication]** [Adaptive Elastic Net Method for Cox Model](https://arxiv.org/abs/1507.06371) by Chunhong Li, Xinxing Wei and Hongshuai Dai (arXiv e-prints)
 | **[Tutorial]** [Survival Analysis / Time-To-Event Analysis in R](https://campus.datacamp.com/courses/survival-analysis-in-r/what-is-survival-analysis?ex=1) by Heidi Seibold (Datacamp)
