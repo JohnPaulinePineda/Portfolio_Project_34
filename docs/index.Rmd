@@ -734,7 +734,7 @@ if (DPA_LinearlyDependentCount > 0) {
 |      **[A.21]** <span style="color: #FF0000">sodium</span> variable (numeric)
 |      **[A.22]** <span style="color: #FF0000">hgb</span> variable (numeric)
 |      **[A.23]** <span style="color: #FF0000">glucose</span> variable (numeric)
-|      **[A.24]** <span style="color: #FF0000">"male</span> variable (factor)
+|      **[A.24]** <span style="color: #FF0000">male</span> variable (factor)
 |      **[A.25]** <span style="color: #FF0000">crcl</span> variable (numeric)
 | **[B]** 14 variables were evaluated as not statistically significant predictors from the univariate Cox Proportional Hazards modelling analysis with p-value>0.05.
 |      **[B.1]** <span style="color: #FF0000">dilver</span> variable (factor)
@@ -746,7 +746,7 @@ if (DPA_LinearlyDependentCount > 0) {
 |      **[B.7]** <span style="color: #FF0000">surgery.pci</span> variable (factor)
 |      **[B.8]** <span style="color: #FF0000">surgery.aicd.implant</span> variable (factor)
 |      **[B.9]** <span style="color: #FF0000">smknow</span> variable (factor)
-|      **[B.10]** <span style="color: #FF0000"q.wave.mi</span> variable (factor)
+|      **[B.10]** <span style="color: #FF0000">q.wave.mi</span> variable (factor)
 |      **[B.11]** <span style="color: #FF0000">bmi</span> variable (numeric)
 |      **[B.12]** <span style="color: #FF0000">niddm</span> variable (factor)
 |      **[B.13]** <span style="color: #FF0000">peak.rer</span> variable (numeric)
@@ -884,12 +884,12 @@ UF_NonSig <- peakVO2[,rownames(UF_CoxPHModelSummary_NonSig)]
 |
 | **[A]** 2231 rows (observations)
 | 
-| **[B]** 39 columns (variables)
-|      **[B.1]** 1/39 survival event status = <span style="color: #FF0000">died</span> variable (factor)
+| **[B]** 27 columns (variables)
+|      **[B.1]** 1/27 survival event status = <span style="color: #FF0000">died</span> variable (factor)
 |             **[B.1.1]** Event = <span style="color: #FF0000">died=1</span> 
 |             **[B.1.2]** Censored or Non-Event = <span style="color: #FF0000">died=0</span>
-|      **[B.2]** 1/39 survival time = <span style="color: #FF0000">ttodead</span> variable (numeric)
-|      **[B.3]** 37/39 predictors = All remaining variables (24/39 factor + 13/39 numeric)
+|      **[B.2]** 1/27 survival time = <span style="color: #FF0000">ttodead</span> variable (numeric)
+|      **[B.3]** 25/27 predictors = All remaining variables (14/25 factor + 11/25 numeric)
 |
 | **[C]** Pre-processing actions applied:
 |      **[C.1]** No centering, scaling and shape transformation applied to maintain interpretability
@@ -897,6 +897,7 @@ UF_NonSig <- peakVO2[,rownames(UF_CoxPHModelSummary_NonSig)]
 |      **[C.3]** 2 predictors removed due to zero or near-zero variance 
 |      **[C.4]** No predictors removed due to high correlation
 |      **[C.5]** No predictors removed due to linear dependencies
+|      **[C.6]** 14 predictors evaluated as not statistically significant predictors from the univariate Cox Proportional Hazards modelling analysis removed
 |
 |
 
@@ -908,7 +909,7 @@ UF_NonSig <- peakVO2[,rownames(UF_CoxPHModelSummary_NonSig)]
 # zero and near-zero variance,
 # to create the pre-modelling dataset
 ##################################
-PMA_ExcludedLowVariance <- peakVO2[,!names(peakVO2) %in% c("dilver","nifed")]
+PMA_ExcludedLowVariance <- peakVO2[,!names(peakVO2) %in% rownames(UF_CoxPHModelSummary_NonSig)]
 
 PMA_PreModelling_Train <- PMA_ExcludedLowVariance
 
@@ -939,12 +940,11 @@ dim(PMA_PreModelling_Train)
 | **[B]** Factor variables which demonstrated differential relationships with the <span style="color: #FF0000">ttodead</span> and <span style="color: #FF0000">died</span> survival time and event status variables, based on the Log-Rank Test p-value and estimated Kaplan-Meier survival curve separations, include:
 |      **[B.1]** <span style="color: #FF0000">betablk</span> variable (factor)
 |      **[B.2]** <span style="color: #FF0000">diuretic.thiazide</span> variable (factor)
-|      **[B.3]** <span style="color: #FF0000">digoxin</span> variable (factor)
-|      **[B.4]** <span style="color: #FF0000">cad</span> variable (factor)
-|      **[B.5]** <span style="color: #FF0000">diuretic.loop</span> variable (factor)
-|      **[B.6]** <span style="color: #FF0000">male</span> variable (factor)
-|      **[B.7]** <span style="color: #FF0000">surgery.cabg</span> variable (factor)
-|      **[B.8]** <span style="color: #FF0000">insulin</span> variable (factor)
+|      **[B.3]** <span style="color: #FF0000">cad</span> variable (factor)
+|      **[B.4]** <span style="color: #FF0000">diuretic.loop</span> variable (factor)
+|      **[B.5]** <span style="color: #FF0000">male</span> variable (factor)
+|      **[B.6]** <span style="color: #FF0000">surgery.cabg</span> variable (factor)
+|      **[B.7]** <span style="color: #FF0000">insulin</span> variable (factor)
 |
 |
 
@@ -983,6 +983,7 @@ EDA.DescriptiveStatistics %>%
 # Listing all predictors
 ##################################
 EDA.Predictors <- EDA[,!names(EDA) %in% c("died","ttodead")]
+
 
 ##################################
 # Listing all numeric predictors
@@ -1058,17 +1059,7 @@ EDA.Bar.Source.FactorVar.Prop.Group <- rbind(EDA.PropTable.Function(names(EDA.Ba
                                               EDA.PropTable.Function(names(EDA.Bar.Source)[12]),
                                               EDA.PropTable.Function(names(EDA.Bar.Source)[13]),
                                               EDA.PropTable.Function(names(EDA.Bar.Source)[14]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[15]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[16]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[17]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[18]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[19]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[20]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[21]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[22]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[23]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[24]),
-                                              EDA.PropTable.Function(names(EDA.Bar.Source)[25]))
+                                              EDA.PropTable.Function(names(EDA.Bar.Source)[15]))
 
 (EDA.Barchart.FactorVar <- barchart(EDA.Bar.Source.FactorVar.Prop.Group[,3] ~
                                       EDA.Bar.Source.FactorVar.Prop.Group[,2] | EDA.Bar.Source.FactorVar.Prop.Group[,4],
@@ -1078,7 +1069,7 @@ EDA.Bar.Source.FactorVar.Prop.Group <- rbind(EDA.PropTable.Function(names(EDA.Ba
                                       ylab = "Proportion",
                                       xlab = "Structure",
                                       auto.key = list(adj = 1),
-                                      layout=(c(6,4))))
+                                      layout=(c(5,3))))
 
 ##################################
 # Formulating the Kaplan-Meier plots
@@ -1164,31 +1155,9 @@ KMPlot_diuretic.thiazide <- ggsurvplot(KM_diuretic.thiazide,
                             pval.size=3,
                             pval=TRUE)
 
-KM_diuretic.potassium.spar <- survfit(Surv(ttodead, died) ~ diuretic.potassium.spar,
-                      data=KM_PreModelling_Train)
-KMPlot_diuretic.potassium.spar <- ggsurvplot(KM_diuretic.potassium.spar,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
 KM_diuretic.loop <- survfit(Surv(ttodead, died) ~ diuretic.loop,
                       data=KM_PreModelling_Train)
 KMPlot_diuretic.loop <- ggsurvplot(KM_diuretic.loop,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
-KM_digoxin <- survfit(Surv(ttodead, died) ~ digoxin,
-                      data=KM_PreModelling_Train)
-KMPlot_digoxin <- ggsurvplot(KM_digoxin,
                             xlab="Survival Time",
                             ylab="Survival Probability",
                             break.time.by=12,
@@ -1208,64 +1177,9 @@ KMPlot_cad <- ggsurvplot(KM_cad,
                             pval.size=3,
                             pval=TRUE)
 
-KM_black <- survfit(Surv(ttodead, died) ~ black,
-                      data=KM_PreModelling_Train)
-KMPlot_black <- ggsurvplot(KM_black,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
-KM_q.wave.mi <- survfit(Surv(ttodead, died) ~ q.wave.mi,
-                      data=KM_PreModelling_Train)
-KMPlot_q.wave.mi <- ggsurvplot(KM_q.wave.mi,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
-KM_nitrates <- survfit(Surv(ttodead, died) ~ nitrates,
-                      data=KM_PreModelling_Train)
-KMPlot_nitrates <- ggsurvplot(KM_nitrates,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
-KM_niddm <- survfit(Surv(ttodead, died) ~ niddm,
-                      data=KM_PreModelling_Train)
-KMPlot_niddm <- ggsurvplot(KM_niddm,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
 KM_male <- survfit(Surv(ttodead, died) ~ male,
                       data=KM_PreModelling_Train)
 KMPlot_male <- ggsurvplot(KM_male,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
-KM_lipidrx.statin <- survfit(Surv(ttodead, died) ~ lipidrx.statin,
-                      data=KM_PreModelling_Train)
-KMPlot_lipidrx.statin <- ggsurvplot(KM_lipidrx.statin,
                             xlab="Survival Time",
                             ylab="Survival Probability",
                             break.time.by=12,
@@ -1296,17 +1210,6 @@ KMPlot_vasodilator <- ggsurvplot(KM_vasodilator,
                             pval.size=3,
                             pval=TRUE)
 
-KM_surgery.pci <- survfit(Surv(ttodead, died) ~ surgery.pci,
-                      data=KM_PreModelling_Train)
-KMPlot_surgery.pci <- ggsurvplot(KM_surgery.pci,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
 KM_surgery.pacemaker <- survfit(Surv(ttodead, died) ~ surgery.pacemaker,
                       data=KM_PreModelling_Train)
 KMPlot_surgery.pacemaker <- ggsurvplot(KM_surgery.pacemaker,
@@ -1329,63 +1232,25 @@ KMPlot_surgery.cabg <- ggsurvplot(KM_surgery.cabg,
                             pval.size=3,
                             pval=TRUE)
 
-KM_surgery.aicd.implant <- survfit(Surv(ttodead, died) ~ surgery.aicd.implant,
-                      data=KM_PreModelling_Train)
-KMPlot_surgery.aicd.implant <- ggsurvplot(KM_surgery.aicd.implant,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
-KM_smknow <- survfit(Surv(ttodead, died) ~ smknow,
-                      data=KM_PreModelling_Train)
-KMPlot_smknow <- ggsurvplot(KM_smknow,
-                            xlab="Survival Time",
-                            ylab="Survival Probability",
-                            break.time.by=12,
-                            ggtheme=theme_bw(),
-                            fontsize=3,
-                            pval.size=3,
-                            pval=TRUE)
-
 KMPlot_List <- list()
 KMPlot_List[[1]] <- KMPlot_betablok
-KMPlot_List[[2]] <- KMPlot_aspirin
-KMPlot_List[[3]] <- KMPlot_anti.coag
+KMPlot_List[[2]] <- KMPlot_acei
+KMPlot_List[[3]] <- KMPlot_angioten.II
 KMPlot_List[[4]] <- KMPlot_anti.arrhy
-KMPlot_List[[5]] <- KMPlot_angioten.II
-KMPlot_List[[6]] <- KMPlot_acei
-KMPlot_List[[7]] <- KMPlot_diuretic.thiazide
-KMPlot_List[[8]] <- KMPlot_diuretic.potassium.spar
-KMPlot_List[[9]] <- KMPlot_diuretic.loop
-KMPlot_List[[10]] <- KMPlot_digoxin
-KMPlot_List[[11]] <- KMPlot_cad
-KMPlot_List[[12]] <- KMPlot_black
-
-arrange_ggsurvplots(KMPlot_List,
-                    ncol=4,
-                    nrow=3)
-
-KMPlot_List <- list()
-KMPlot_List[[1]] <- KMPlot_q.wave.mi
-KMPlot_List[[2]] <- KMPlot_nitrates
-KMPlot_List[[3]] <- KMPlot_niddm
-KMPlot_List[[4]] <- KMPlot_male
-KMPlot_List[[5]] <- KMPlot_lipidrx.statin
-KMPlot_List[[6]] <- KMPlot_insulin
+KMPlot_List[[5]] <- KMPlot_anti.coag
+KMPlot_List[[6]] <- KMPlot_aspirin
 KMPlot_List[[7]] <- KMPlot_vasodilator
-KMPlot_List[[8]] <- KMPlot_surgery.pci
-KMPlot_List[[9]] <- KMPlot_surgery.pacemaker
-KMPlot_List[[10]] <- KMPlot_surgery.cabg
-KMPlot_List[[11]] <- KMPlot_surgery.aicd.implant
-KMPlot_List[[12]] <- KMPlot_smknow
+KMPlot_List[[8]] <- KMPlot_diuretic.loop
+KMPlot_List[[9]] <- KMPlot_diuretic.thiazide
+KMPlot_List[[10]] <- KMPlot_insulin
+KMPlot_List[[11]] <- KMPlot_surgery.pacemaker
+KMPlot_List[[12]] <- KMPlot_surgery.cabg
+KMPlot_List[[13]] <- KMPlot_cad
+KMPlot_List[[14]] <- KMPlot_male
 
 arrange_ggsurvplots(KMPlot_List,
-                    ncol=4,
-                    nrow=3)
+                    ncol=3,
+                    nrow=5)
 
 ```
 
