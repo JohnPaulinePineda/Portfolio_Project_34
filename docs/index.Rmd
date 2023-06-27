@@ -1273,7 +1273,7 @@ PMA_PreModelling_LASSO <- peakVO2.Source[,!names(peakVO2.Source) %in% rownames(U
 ##################################
 # Setting the appropriate variable types
 ##################################
-PMA_PreModelling_LASSO$died <- as.numeric(PMA_PreModelling_LASSO$died)
+PMA_PreModelling_LASSO$died <- as.factor(PMA_PreModelling_LASSO$died)
 
 ##################################
 # Creating a local object
@@ -1288,21 +1288,25 @@ TrainIndex <- createDataPartition(PMA_PreModelling_LASSO$died,
 PMA_PreModelling_LASSO_Train <- PMA_PreModelling_LASSO[ TrainIndex,]
 PMA_PreModelling_LASSO_Test  <- PMA_PreModelling_LASSO[-TrainIndex,]
 
+PMA_PreModelling_LASSO_Train$died <- as.numeric(PMA_PreModelling_LASSO_Train$died)
+PMA_PreModelling_LASSO_Test$died  <- as.numeric(PMA_PreModelling_LASSO_Test$died)
+
 ##################################
 # Formulating the model components
 # for the train data
 ##################################
-LASSO_Predictors <- as.matrix(PMA_PreModelling_LASSO_Train[,!names(PMA_PreModelling_LASSO_Train) 
-                                                           %in% c("ttodead","died")])
-LASSO_Time    <- PMA_PreModelling_LASSO_Train$ttodead
-LASSO_Status  <- PMA_PreModelling_LASSO_Train$died
-LASSO_Response <- survival::Surv(LASSO_Time, LASSO_Status)
+LASSO_Train_Predictors <- as.matrix(
+  PMA_PreModelling_LASSO_Train[,!names(PMA_PreModelling_LASSO_Train) 
+                               %in% c("ttodead","died")])
+LASSO_Train_Time    <- PMA_PreModelling_LASSO_Train$ttodead
+LASSO_Train_Status  <- PMA_PreModelling_LASSO_Train$died
+LASSO_Train_Response <- survival::Surv(LASSO_Train_Time, LASSO_Train_Status)
 
 ##################################
 # Fitting a LASSO model
 ##################################
-LASSO_CoxPH_Fit <- fit_lasso(LASSO_Predictors,
-                              LASSO_Response,
+LASSO_Train_CoxPH_Fit <- fit_lasso(LASSO_Train_Predictors,
+                              LASSO_Train_Response,
                               nfolds = 5,
                               rule = "lambda.1se",
                               seed = 88888888)
@@ -1312,25 +1316,194 @@ LASSO_CoxPH_Fit <- fit_lasso(LASSO_Predictors,
 # optimal hyperparameters
 # from the LASSO model
 ##################################
-(LASSO_CoxPH_Model  <- LASSO_CoxPH_Fit$model)
-(LASSO_CoxPH_Model  <- LASSO_CoxPH_Fit$model$beta)
-(LASSO_CoxPH_Alpha  <- LASSO_CoxPH_Fit$alpha)
-(LASSO_CoxPH_Lambda <- LASSO_CoxPH_Fit$lambda)
-(LASSO_CoxPH_PenaltyFactor <- LASSO_CoxPH_Fit$pen_factor)
+(LASSO_Train_CoxPH_Model  <- LASSO_Train_CoxPH_Fit$model)
+(LASSO_Train_CoxPH_Model  <- LASSO_Train_CoxPH_Fit$model$beta)
+(LASSO_Train_CoxPH_Alpha  <- LASSO_Train_CoxPH_Fit$alpha)
+(LASSO_Train_CoxPH_Lambda <- LASSO_Train_CoxPH_Fit$lambda)
+(LASSO_Train_CoxPH_PenaltyFactor <- LASSO_Train_CoxPH_Fit$pen_factor)
 
 ##################################
-# Formulating a nomogram
+# Conducting an internal validation
 # of the LASSO model
+# using a 200-cycle bootstrap
 ##################################
-LASSO_CoxPH_Model <- as_nomogram(LASSO_CoxPH_Fit, 
-                                 LASSO_Predictors, 
-                                 LASSO_Time, 
-                                 LASSO_Status,
-                                 pred.at = 5,
-                                 funlabel = "5-Year Overall Survival Probability"
-)
+LASSO_Train_CoxPH_Model_InternalValidation <- validate(LASSO_Train_Predictors,
+                                                       LASSO_Train_Time,
+                                                       LASSO_Train_Status,
+                                                       model.type = "lasso",
+                                                       alpha = 1,
+                                                       lambda = LASSO_Train_CoxPH_Fit$lambda,
+                                                       method = "bootstrap",
+                                                       boot.times = 200,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12),
+                                                       seed = 88888888)
 
-plot(LASSO_CoxPH_Model)
+print(LASSO_Train_CoxPH_Model_InternalValidation)
+
+summary(LASSO_Train_CoxPH_Model_InternalValidation)
+
+plot(LASSO_Train_CoxPH_Model_InternalValidation)
+
+##################################
+# Conducting an external validation
+# of the LASSO model
+# using the test data
+##################################
+LASSO_Test_Predictors <- as.matrix(
+  PMA_PreModelling_LASSO_Test[,!names(PMA_PreModelling_LASSO_Test)
+                               %in% c("ttodead","died")])
+LASSO_Test_Time    <- PMA_PreModelling_LASSO_Test$ttodead
+LASSO_Test_Status  <- PMA_PreModelling_LASSO_Test$died
+LASSO_Test_Response <- survival::Surv(LASSO_Test_Time, LASSO_Test_Status)
+
+LASSO_Train_CoxPH_Model_ExternalValidation <- validate_external(LASSO_Train_CoxPH_Fit,
+                                                       LASSO_Train_Predictors,
+                                                       LASSO_Train_Time,
+                                                       LASSO_Train_Status,
+                                                       LASSO_Test_Predictors,
+                                                       LASSO_Test_Time,
+                                                       LASSO_Test_Status,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12))
+
+print(LASSO_Train_CoxPH_Model_ExternalValidation)
+
+summary(LASSO_Train_CoxPH_Model_ExternalValidation)
+
+plot(LASSO_Train_CoxPH_Model_ExternalValidation)
+
+##################################
+# Conducting an internal calibration
+# of the LASSO model
+# using a 200-cycle bootstrap
+# for Year 5
+##################################
+LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
+                                                       LASSO_Train_Time,
+                                                       LASSO_Train_Status,
+                                                       model.type = "lasso",
+                                                       alpha = 1,
+                                                       lambda = LASSO_Train_CoxPH_Fit$lambda,
+                                                       method = "bootstrap",
+                                                       boot.times = 200,
+                                                       pred.at = 60,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(LASSO_Train_CoxPH_Model_InternalCalibration)
+
+summary(LASSO_Train_CoxPH_Model_InternalCalibration)
+
+plot(LASSO_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the LASSO model
+# for the risk groups
+# using the train data
+##################################
+LASSO_Train_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an internal calibration
+# of the LASSO model
+# using a 200-cycle bootstrap
+# for Year 10
+##################################
+LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
+                                                       LASSO_Train_Time,
+                                                       LASSO_Train_Status,
+                                                       model.type = "lasso",
+                                                       alpha = 1,
+                                                       lambda = LASSO_Train_CoxPH_Fit$lambda,
+                                                       method = "bootstrap",
+                                                       boot.times = 200,
+                                                       pred.at = 120,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(LASSO_Train_CoxPH_Model_InternalCalibration)
+
+summary(LASSO_Train_CoxPH_Model_InternalCalibration)
+
+plot(LASSO_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the LASSO model
+# for the risk groups
+# using the train data
+##################################
+LASSO_Train_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the LASSO model
+# using the test data
+# for Year 5
+##################################
+LASSO_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(LASSO_Train_CoxPH_Fit,
+                                                       LASSO_Train_Predictors,
+                                                       LASSO_Train_Time,
+                                                       LASSO_Train_Status,
+                                                       LASSO_Test_Predictors,
+                                                       LASSO_Test_Time,
+                                                       LASSO_Test_Status,
+                                                       pred.at = 60,
+                                                       ngroup = 3)
+
+print(LASSO_Train_CoxPH_Model_ExternalCalibration)
+
+summary(LASSO_Train_CoxPH_Model_ExternalCalibration)
+
+plot(LASSO_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the LASSO model
+# for the risk groups
+# using the test data
+##################################
+LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the LASSO model
+# using the test data
+# for Year 10
+##################################
+LASSO_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(LASSO_Train_CoxPH_Fit,
+                                                       LASSO_Train_Predictors,
+                                                       LASSO_Train_Time,
+                                                       LASSO_Train_Status,
+                                                       LASSO_Test_Predictors,
+                                                       LASSO_Test_Time,
+                                                       LASSO_Test_Status,
+                                                       pred.at = 120,
+                                                       ngroup = 3)
+
+print(LASSO_Train_CoxPH_Model_ExternalCalibration)
+
+summary(LASSO_Train_CoxPH_Model_ExternalCalibration)
+
+plot(LASSO_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the LASSO model
+# for the risk groups
+# using the test data
+##################################
+LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
 
 ```
 
