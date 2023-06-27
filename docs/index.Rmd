@@ -909,9 +909,9 @@ UF_NonSig <- peakVO2[,rownames(UF_CoxPHModelSummary_NonSig)]
 # zero and near-zero variance,
 # to create the pre-modelling dataset
 ##################################
-PMA_ExcludedLowVariance <- peakVO2[,!names(peakVO2) %in% rownames(UF_CoxPHModelSummary_NonSig)]
+PMA_ExcludedNonSig <- peakVO2[,!names(peakVO2) %in% rownames(UF_CoxPHModelSummary_NonSig)]
 
-PMA_PreModelling_Train <- PMA_ExcludedLowVariance
+PMA_PreModelling_Train <- PMA_ExcludedNonSig
 
 ##################################
 # Gathering descriptive statistics
@@ -1265,6 +1265,72 @@ arrange_ggsurvplots(KMPlot_List,
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.1, warning=FALSE, message=FALSE}
+##################################
+# Loading the preprocessed data
+##################################
+PMA_PreModelling_LASSO <- peakVO2.Source[,!names(peakVO2.Source) %in% rownames(UF_CoxPHModelSummary_NonSig)]
+
+##################################
+# Setting the appropriate variable types
+##################################
+PMA_PreModelling_LASSO$died <- as.numeric(PMA_PreModelling_LASSO$died)
+
+##################################
+# Creating a local object
+# for the train and test sets
+##################################
+set.seed(88888888)
+TrainIndex <- createDataPartition(PMA_PreModelling_LASSO$died, 
+                                  p = 0.8, 
+                                  list = FALSE, 
+                                  times = 1)
+
+PMA_PreModelling_LASSO_Train <- PMA_PreModelling_LASSO[ TrainIndex,]
+PMA_PreModelling_LASSO_Test  <- PMA_PreModelling_LASSO[-TrainIndex,]
+
+##################################
+# Formulating the model components
+# for the train data
+##################################
+LASSO_Predictors <- as.matrix(PMA_PreModelling_LASSO_Train[,!names(PMA_PreModelling_LASSO_Train) 
+                                                           %in% c("ttodead","died")])
+LASSO_Time    <- PMA_PreModelling_LASSO_Train$ttodead
+LASSO_Status  <- PMA_PreModelling_LASSO_Train$died
+LASSO_Response <- survival::Surv(LASSO_Time, LASSO_Status)
+
+##################################
+# Fitting a LASSO model
+##################################
+LASSO_CoxPH_Fit <- fit_lasso(LASSO_Predictors,
+                              LASSO_Response,
+                              nfolds = 5,
+                              rule = "lambda.1se",
+                              seed = 88888888)
+
+##################################
+# Extracting the model objects and
+# optimal hyperparameters
+# from the LASSO model
+##################################
+(LASSO_CoxPH_Model  <- LASSO_CoxPH_Fit$model)
+(LASSO_CoxPH_Model  <- LASSO_CoxPH_Fit$model$beta)
+(LASSO_CoxPH_Alpha  <- LASSO_CoxPH_Fit$alpha)
+(LASSO_CoxPH_Lambda <- LASSO_CoxPH_Fit$lambda)
+(LASSO_CoxPH_PenaltyFactor <- LASSO_CoxPH_Fit$pen_factor)
+
+##################################
+# Formulating a nomogram
+# of the LASSO model
+##################################
+LASSO_CoxPH_Model <- as_nomogram(LASSO_CoxPH_Fit, 
+                                 LASSO_Predictors, 
+                                 LASSO_Time, 
+                                 LASSO_Status,
+                                 pred.at = 5,
+                                 funlabel = "5-Year Overall Survival Probability"
+)
+
+plot(LASSO_CoxPH_Model)
 
 ```
 
