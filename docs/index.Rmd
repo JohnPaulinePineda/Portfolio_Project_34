@@ -1,7 +1,7 @@
 ---
 title: "R : Exploring Penalized Models for Handling High-Dimensional Survival Data"
 author: "John Pauline Pineda"
-date: "June 27, 2023"
+date: "June 30, 2023"
 output: 
   html_document:
     toc: true
@@ -1261,6 +1261,9 @@ arrange_ggsurvplots(KMPlot_List,
 ###  1.5.1 Least Absolute Shrinkage and Selection Operator (LASSO)
 |
 |
+| [Least Absolute Shrinkage and Selection Operator Regression](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm adds a penalty term (referred to as the L1 regularization) to the regression cost function that is proportional to the absolute value of the coefficients. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability. A hyperparameter fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
+|
+|
 
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
@@ -1325,7 +1328,7 @@ LASSO_Train_CoxPH_Fit <- fit_lasso(LASSO_Train_Predictors,
 ##################################
 # Conducting an internal validation
 # of the LASSO model
-# using a 200-cycle bootstrap
+# using a 50-cycle bootstrap
 ##################################
 LASSO_Train_CoxPH_Model_InternalValidation <- validate(LASSO_Train_Predictors,
                                                        LASSO_Train_Time,
@@ -1334,7 +1337,7 @@ LASSO_Train_CoxPH_Model_InternalValidation <- validate(LASSO_Train_Predictors,
                                                        alpha = 1,
                                                        lambda = LASSO_Train_CoxPH_Fit$lambda,
                                                        method = "bootstrap",
-                                                       boot.times = 200,
+                                                       boot.times = 50,
                                                        tauc.type = "UNO",
                                                        tauc.time = seq(12, 120, 12),
                                                        seed = 88888888)
@@ -1343,7 +1346,19 @@ print(LASSO_Train_CoxPH_Model_InternalValidation)
 
 summary(LASSO_Train_CoxPH_Model_InternalValidation)
 
-plot(LASSO_Train_CoxPH_Model_InternalValidation)
+LASSO_Train_IV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(LASSO_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  LASSO_Train_IV_Summary[i,1] <- "LASSO"
+  LASSO_Train_IV_Summary[i,2] <- "Cross-Validation"
+  LASSO_Train_IV_Summary[i,3] <- summary(LASSO_Train_CoxPH_Model_InternalValidation)[[4,i]] 
+}
+
+LASSO_Train_IV_Summary
+
+plot(LASSO_Train_CoxPH_Model_InternalValidation, 
+     ylim = c(0, 1))
 
 ##################################
 # Conducting an external validation
@@ -1371,12 +1386,24 @@ print(LASSO_Train_CoxPH_Model_ExternalValidation)
 
 summary(LASSO_Train_CoxPH_Model_ExternalValidation)
 
-plot(LASSO_Train_CoxPH_Model_ExternalValidation)
+LASSO_Train_EV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(LASSO_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  LASSO_Train_EV_Summary[i,1] <- "LASSO"
+  LASSO_Train_EV_Summary[i,2] <- "Test"
+  LASSO_Train_EV_Summary[i,3] <- summary(LASSO_Train_CoxPH_Model_ExternalValidation)[[1,i]] 
+}
+
+LASSO_Train_EV_Summary
+
+plot(LASSO_Train_CoxPH_Model_ExternalValidation, 
+     ylim = c(0, 1))
 
 ##################################
 # Conducting an internal calibration
 # of the LASSO model
-# using a 200-cycle bootstrap
+# using a 50-cycle bootstrap
 # for Year 5
 ##################################
 LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
@@ -1386,7 +1413,7 @@ LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
                                                        alpha = 1,
                                                        lambda = LASSO_Train_CoxPH_Fit$lambda,
                                                        method = "bootstrap",
-                                                       boot.times = 200,
+                                                       boot.times = 50,
                                                        pred.at = 60,
                                                        ngroup = 3,
                                                        seed = 88888888)
@@ -1410,7 +1437,7 @@ LASSO_Train_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_InternalCalibr
 ##################################
 # Conducting an internal calibration
 # of the LASSO model
-# using a 200-cycle bootstrap
+# using a 50-cycle bootstrap
 # for Year 10
 ##################################
 LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
@@ -1420,7 +1447,7 @@ LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
                                                        alpha = 1,
                                                        lambda = LASSO_Train_CoxPH_Fit$lambda,
                                                        method = "bootstrap",
-                                                       boot.times = 200,
+                                                       boot.times = 50,
                                                        pred.at = 120,
                                                        ngroup = 3,
                                                        seed = 88888888)
@@ -1522,6 +1549,8 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 </details>
 
 ###  1.5.3 Elastic Net (ENET)
+|
+| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regression technique aimed at preventing overfitting in linear regression models when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. This approach can be useful when there are many predictor variables that are correlated with the response variable, but only a subset of them are truly important for predicting the response. The L1 regularization term can help to select the important variables, while the L2 regularization term can help to reduce the magnitude of the coefficients. Hyperparameters lambda that controls the weighting of the L2 regularization to the loss function, and fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
 |
 |
 
