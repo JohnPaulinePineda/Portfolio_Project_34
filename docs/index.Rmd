@@ -2131,6 +2131,271 @@ MCP_Test_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_ExternalCalibration
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.7, warning=FALSE, message=FALSE}
+##################################
+# Loading the preprocessed data
+##################################
+PMA_PreModelling_SCAD <- peakVO2.Source[,!names(peakVO2.Source) %in% rownames(UF_CoxPHModelSummary_NonSig)]
+
+##################################
+# Setting the appropriate variable types
+##################################
+PMA_PreModelling_SCAD$died <- as.factor(PMA_PreModelling_SCAD$died)
+
+##################################
+# Creating a local object
+# for the train and test sets
+##################################
+set.seed(88888888)
+TrainIndex <- createDataPartition(PMA_PreModelling_SCAD$died, 
+                                  p = 0.8, 
+                                  list = FALSE, 
+                                  times = 1)
+
+PMA_PreModelling_SCAD_Train <- PMA_PreModelling_SCAD[ TrainIndex,]
+PMA_PreModelling_SCAD_Test  <- PMA_PreModelling_SCAD[-TrainIndex,]
+
+PMA_PreModelling_SCAD_Train$died <- as.numeric(PMA_PreModelling_SCAD_Train$died)
+PMA_PreModelling_SCAD_Test$died  <- as.numeric(PMA_PreModelling_SCAD_Test$died)
+
+##################################
+# Formulating the model components
+# for the train data
+##################################
+SCAD_Train_Predictors <- as.matrix(
+  PMA_PreModelling_SCAD_Train[,!names(PMA_PreModelling_SCAD_Train) 
+                               %in% c("ttodead","died")])
+SCAD_Train_Time    <- PMA_PreModelling_SCAD_Train$ttodead
+SCAD_Train_Status  <- PMA_PreModelling_SCAD_Train$died
+SCAD_Train_Response <- survival::Surv(SCAD_Train_Time, SCAD_Train_Status)
+
+##################################
+# Fitting a SCAD model
+##################################
+SCAD_Train_CoxPH_Fit <- fit_scad(SCAD_Train_Predictors,
+                              SCAD_Train_Response,
+                              nfolds = 5, 
+                              gammas = c(2.1, 3, 4, 5),
+                              seed = 88888888)
+
+##################################
+# Extracting the model objects and
+# optimal hyperparameters
+# from the SCAD model
+##################################
+(SCAD_Train_CoxPH_Model  <- SCAD_Train_CoxPH_Fit$model)
+(SCAD_Train_CoxPH_Model  <- SCAD_Train_CoxPH_Fit$model$beta)
+(SCAD_Train_CoxPH_Lambda <- SCAD_Train_CoxPH_Fit$lambda)
+(SCAD_Train_CoxPH_Gamma <- SCAD_Train_CoxPH_Fit$gamma)
+
+##################################
+# Conducting an internal validation
+# of the SCAD model
+# using a 50-cycle bootstrap
+##################################
+SCAD_Train_CoxPH_Model_InternalValidation <- validate(SCAD_Train_Predictors,
+                                                       SCAD_Train_Time,
+                                                       SCAD_Train_Status,
+                                                       model.type = "scad",
+                                                       alpha = 1,
+                                                       lambda = SCAD_Train_CoxPH_Fit$lambda,
+                                                       gamma = SCAD_Train_CoxPH_Fit$gamma,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12),
+                                                       seed = 88888888)
+
+print(SCAD_Train_CoxPH_Model_InternalValidation)
+
+summary(SCAD_Train_CoxPH_Model_InternalValidation)
+
+SCAD_Train_IV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(SCAD_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  SCAD_Train_IV_Summary[i,1] <- "SCAD"
+  SCAD_Train_IV_Summary[i,2] <- "Cross-Validation"
+  SCAD_Train_IV_Summary[i,3] <- summary(SCAD_Train_CoxPH_Model_InternalValidation)[[4,i]]
+}
+
+SCAD_Train_IV_Summary
+
+plot(SCAD_Train_CoxPH_Model_InternalValidation,
+     ylim = c(0, 1))
+
+##################################
+# Conducting an external validation
+# of the SCAD model
+# using the test data
+##################################
+SCAD_Test_Predictors <- as.matrix(
+  PMA_PreModelling_SCAD_Test[,!names(PMA_PreModelling_SCAD_Test)
+                               %in% c("ttodead","died")])
+SCAD_Test_Time    <- PMA_PreModelling_SCAD_Test$ttodead
+SCAD_Test_Status  <- PMA_PreModelling_SCAD_Test$died
+SCAD_Test_Response <- survival::Surv(SCAD_Test_Time, SCAD_Test_Status)
+
+SCAD_Train_CoxPH_Model_ExternalValidation <- validate_external(SCAD_Train_CoxPH_Fit,
+                                                       SCAD_Train_Predictors,
+                                                       SCAD_Train_Time,
+                                                       SCAD_Train_Status,
+                                                       SCAD_Test_Predictors,
+                                                       SCAD_Test_Time,
+                                                       SCAD_Test_Status,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12))
+
+print(SCAD_Train_CoxPH_Model_ExternalValidation)
+
+summary(SCAD_Train_CoxPH_Model_ExternalValidation)
+
+SCAD_Train_EV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(SCAD_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  SCAD_Train_EV_Summary[i,1] <- "SCAD"
+  SCAD_Train_EV_Summary[i,2] <- "Test"
+  SCAD_Train_EV_Summary[i,3] <- summary(SCAD_Train_CoxPH_Model_ExternalValidation)[[1,i]]
+}
+
+SCAD_Train_EV_Summary
+
+plot(SCAD_Train_CoxPH_Model_ExternalValidation,
+     ylim = c(0, 1))
+
+##################################
+# Conducting an internal calibration
+# of the SCAD model
+# using a 50-cycle bootstrap
+# for Year 5
+##################################
+SCAD_Train_CoxPH_Model_InternalCalibration <- calibrate(SCAD_Train_Predictors,
+                                                       SCAD_Train_Time,
+                                                       SCAD_Train_Status,
+                                                       model.type = "scad",
+                                                       alpha = 1,
+                                                       lambda = SCAD_Train_CoxPH_Fit$lambda,
+                                                       gamma = SCAD_Train_CoxPH_Fit$gamma,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       pred.at = 60,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(SCAD_Train_CoxPH_Model_InternalCalibration)
+
+summary(SCAD_Train_CoxPH_Model_InternalCalibration)
+
+plot(SCAD_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the SCAD model
+# for the risk groups
+# using the train data
+##################################
+SCAD_Train_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an internal calibration
+# of the SCAD model
+# using a 50-cycle bootstrap
+# for Year 10
+##################################
+SCAD_Train_CoxPH_Model_InternalCalibration <- calibrate(SCAD_Train_Predictors,
+                                                       SCAD_Train_Time,
+                                                       SCAD_Train_Status,
+                                                       model.type = "scad",
+                                                       alpha = 1,
+                                                       lambda = SCAD_Train_CoxPH_Fit$lambda,
+                                                       gamma = SCAD_Train_CoxPH_Fit$gamma,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       pred.at = 120,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(SCAD_Train_CoxPH_Model_InternalCalibration)
+
+summary(SCAD_Train_CoxPH_Model_InternalCalibration)
+
+plot(SCAD_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the SCAD model
+# for the risk groups
+# using the train data
+##################################
+SCAD_Train_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the SCAD model
+# using the test data
+# for Year 5
+##################################
+SCAD_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(SCAD_Train_CoxPH_Fit,
+                                                       SCAD_Train_Predictors,
+                                                       SCAD_Train_Time,
+                                                       SCAD_Train_Status,
+                                                       SCAD_Test_Predictors,
+                                                       SCAD_Test_Time,
+                                                       SCAD_Test_Status,
+                                                       pred.at = 60,
+                                                       ngroup = 3)
+
+print(SCAD_Train_CoxPH_Model_ExternalCalibration)
+
+summary(SCAD_Train_CoxPH_Model_ExternalCalibration)
+
+plot(SCAD_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the SCAD model
+# for the risk groups
+# using the test data
+##################################
+SCAD_Test_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the SCAD model
+# using the test data
+# for Year 10
+##################################
+SCAD_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(SCAD_Train_CoxPH_Fit,
+                                                       SCAD_Train_Predictors,
+                                                       SCAD_Train_Time,
+                                                       SCAD_Train_Status,
+                                                       SCAD_Test_Predictors,
+                                                       SCAD_Test_Time,
+                                                       SCAD_Test_Status,
+                                                       pred.at = 120,
+                                                       ngroup = 3)
+
+print(SCAD_Train_CoxPH_Model_ExternalCalibration)
+
+summary(SCAD_Train_CoxPH_Model_ExternalCalibration)
+
+plot(SCAD_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the SCAD model
+# for the risk groups
+# using the test data
+##################################
+SCAD_Test_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
 
 ```
 
