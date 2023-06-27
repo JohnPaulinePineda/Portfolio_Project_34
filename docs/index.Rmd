@@ -1321,9 +1321,7 @@ LASSO_Train_CoxPH_Fit <- fit_lasso(LASSO_Train_Predictors,
 ##################################
 (LASSO_Train_CoxPH_Model  <- LASSO_Train_CoxPH_Fit$model)
 (LASSO_Train_CoxPH_Model  <- LASSO_Train_CoxPH_Fit$model$beta)
-(LASSO_Train_CoxPH_Alpha  <- LASSO_Train_CoxPH_Fit$alpha)
 (LASSO_Train_CoxPH_Lambda <- LASSO_Train_CoxPH_Fit$lambda)
-(LASSO_Train_CoxPH_PenaltyFactor <- LASSO_Train_CoxPH_Fit$pen_factor)
 
 ##################################
 # Conducting an internal validation
@@ -1550,7 +1548,7 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 
 ###  1.5.3 Elastic Net (ENET)
 |
-| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regression technique aimed at preventing overfitting in linear regression models when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. This approach can be useful when there are many predictor variables that are correlated with the response variable, but only a subset of them are truly important for predicting the response. The L1 regularization term can help to select the important variables, while the L2 regularization term can help to reduce the magnitude of the coefficients. Hyperparameters lambda that controls the weighting of the L2 regularization to the loss function, and fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
+| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. This approach can be useful when there are many predictor variables that are correlated with the response variable, but only a subset of them are truly important for predicting the response. The L1 regularization term can help to select the important variables, while the L2 regularization term can help to reduce the magnitude of the coefficients. Hyperparameters lambda that controls the weighting of the L2 regularization to the loss function, and fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
 |
 |
 
@@ -1611,9 +1609,8 @@ ENET_Train_CoxPH_Fit <- fit_enet(ENET_Train_Predictors,
 ##################################
 (ENET_Train_CoxPH_Model  <- ENET_Train_CoxPH_Fit$model)
 (ENET_Train_CoxPH_Model  <- ENET_Train_CoxPH_Fit$model$beta)
-(ENET_Train_CoxPH_Alpha  <- ENET_Train_CoxPH_Fit$alpha)
+(ENET_Train_CoxPH_Alpha <- ENET_Train_CoxPH_Fit$alpha)
 (ENET_Train_CoxPH_Lambda <- ENET_Train_CoxPH_Fit$lambda)
-(ENET_Train_CoxPH_PenaltyFactor <- ENET_Train_CoxPH_Fit$pen_factor)
 
 ##################################
 # Conducting an internal validation
@@ -1845,6 +1842,271 @@ ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibrati
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.5, warning=FALSE, message=FALSE}
+##################################
+# Loading the preprocessed data
+##################################
+PMA_PreModelling_MCP <- peakVO2.Source[,!names(peakVO2.Source) %in% rownames(UF_CoxPHModelSummary_NonSig)]
+
+##################################
+# Setting the appropriate variable types
+##################################
+PMA_PreModelling_MCP$died <- as.factor(PMA_PreModelling_MCP$died)
+
+##################################
+# Creating a local object
+# for the train and test sets
+##################################
+set.seed(88888888)
+TrainIndex <- createDataPartition(PMA_PreModelling_MCP$died, 
+                                  p = 0.8, 
+                                  list = FALSE, 
+                                  times = 1)
+
+PMA_PreModelling_MCP_Train <- PMA_PreModelling_MCP[ TrainIndex,]
+PMA_PreModelling_MCP_Test  <- PMA_PreModelling_MCP[-TrainIndex,]
+
+PMA_PreModelling_MCP_Train$died <- as.numeric(PMA_PreModelling_MCP_Train$died)
+PMA_PreModelling_MCP_Test$died  <- as.numeric(PMA_PreModelling_MCP_Test$died)
+
+##################################
+# Formulating the model components
+# for the train data
+##################################
+MCP_Train_Predictors <- as.matrix(
+  PMA_PreModelling_MCP_Train[,!names(PMA_PreModelling_MCP_Train) 
+                               %in% c("ttodead","died")])
+MCP_Train_Time    <- PMA_PreModelling_MCP_Train$ttodead
+MCP_Train_Status  <- PMA_PreModelling_MCP_Train$died
+MCP_Train_Response <- survival::Surv(MCP_Train_Time, MCP_Train_Status)
+
+##################################
+# Fitting a MCP model
+##################################
+MCP_Train_CoxPH_Fit <- fit_mcp(MCP_Train_Predictors,
+                              MCP_Train_Response,
+                              nfolds = 5, 
+                              gammas = c(2.1, 3, 4, 5),
+                              seed = 88888888)
+
+##################################
+# Extracting the model objects and
+# optimal hyperparameters
+# from the MCP model
+##################################
+(MCP_Train_CoxPH_Model  <- MCP_Train_CoxPH_Fit$model)
+(MCP_Train_CoxPH_Model  <- MCP_Train_CoxPH_Fit$model$beta)
+(MCP_Train_CoxPH_Lambda <- MCP_Train_CoxPH_Fit$lambda)
+(MCP_Train_CoxPH_Gamma <- MCP_Train_CoxPH_Fit$gamma)
+
+##################################
+# Conducting an internal validation
+# of the MCP model
+# using a 50-cycle bootstrap
+##################################
+MCP_Train_CoxPH_Model_InternalValidation <- validate(MCP_Train_Predictors,
+                                                       MCP_Train_Time,
+                                                       MCP_Train_Status,
+                                                       model.type = "mcp",
+                                                       alpha = 1,
+                                                       lambda = MCP_Train_CoxPH_Fit$lambda,
+                                                       gamma = MCP_Train_CoxPH_Fit$gamma,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12),
+                                                       seed = 88888888)
+
+print(MCP_Train_CoxPH_Model_InternalValidation)
+
+summary(MCP_Train_CoxPH_Model_InternalValidation)
+
+MCP_Train_IV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(MCP_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  MCP_Train_IV_Summary[i,1] <- "MCP"
+  MCP_Train_IV_Summary[i,2] <- "Cross-Validation"
+  MCP_Train_IV_Summary[i,3] <- summary(MCP_Train_CoxPH_Model_InternalValidation)[[4,i]]
+}
+
+MCP_Train_IV_Summary
+
+plot(MCP_Train_CoxPH_Model_InternalValidation,
+     ylim = c(0, 1))
+
+##################################
+# Conducting an external validation
+# of the MCP model
+# using the test data
+##################################
+MCP_Test_Predictors <- as.matrix(
+  PMA_PreModelling_MCP_Test[,!names(PMA_PreModelling_MCP_Test)
+                               %in% c("ttodead","died")])
+MCP_Test_Time    <- PMA_PreModelling_MCP_Test$ttodead
+MCP_Test_Status  <- PMA_PreModelling_MCP_Test$died
+MCP_Test_Response <- survival::Surv(MCP_Test_Time, MCP_Test_Status)
+
+MCP_Train_CoxPH_Model_ExternalValidation <- validate_external(MCP_Train_CoxPH_Fit,
+                                                       MCP_Train_Predictors,
+                                                       MCP_Train_Time,
+                                                       MCP_Train_Status,
+                                                       MCP_Test_Predictors,
+                                                       MCP_Test_Time,
+                                                       MCP_Test_Status,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12))
+
+print(MCP_Train_CoxPH_Model_ExternalValidation)
+
+summary(MCP_Train_CoxPH_Model_ExternalValidation)
+
+MCP_Train_EV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(MCP_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  MCP_Train_EV_Summary[i,1] <- "MCP"
+  MCP_Train_EV_Summary[i,2] <- "Test"
+  MCP_Train_EV_Summary[i,3] <- summary(MCP_Train_CoxPH_Model_ExternalValidation)[[1,i]]
+}
+
+MCP_Train_EV_Summary
+
+plot(MCP_Train_CoxPH_Model_ExternalValidation,
+     ylim = c(0, 1))
+
+##################################
+# Conducting an internal calibration
+# of the MCP model
+# using a 50-cycle bootstrap
+# for Year 5
+##################################
+MCP_Train_CoxPH_Model_InternalCalibration <- calibrate(MCP_Train_Predictors,
+                                                       MCP_Train_Time,
+                                                       MCP_Train_Status,
+                                                       model.type = "mcp",
+                                                       alpha = 1,
+                                                       lambda = MCP_Train_CoxPH_Fit$lambda,
+                                                       gamma = MCP_Train_CoxPH_Fit$gamma,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       pred.at = 60,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(MCP_Train_CoxPH_Model_InternalCalibration)
+
+summary(MCP_Train_CoxPH_Model_InternalCalibration)
+
+plot(MCP_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the MCP model
+# for the risk groups
+# using the train data
+##################################
+MCP_Train_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an internal calibration
+# of the MCP model
+# using a 50-cycle bootstrap
+# for Year 10
+##################################
+MCP_Train_CoxPH_Model_InternalCalibration <- calibrate(MCP_Train_Predictors,
+                                                       MCP_Train_Time,
+                                                       MCP_Train_Status,
+                                                       model.type = "mcp",
+                                                       alpha = 1,
+                                                       lambda = MCP_Train_CoxPH_Fit$lambda,
+                                                       gamma = MCP_Train_CoxPH_Fit$gamma,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       pred.at = 120,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(MCP_Train_CoxPH_Model_InternalCalibration)
+
+summary(MCP_Train_CoxPH_Model_InternalCalibration)
+
+plot(MCP_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the MCP model
+# for the risk groups
+# using the train data
+##################################
+MCP_Train_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the MCP model
+# using the test data
+# for Year 5
+##################################
+MCP_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(MCP_Train_CoxPH_Fit,
+                                                       MCP_Train_Predictors,
+                                                       MCP_Train_Time,
+                                                       MCP_Train_Status,
+                                                       MCP_Test_Predictors,
+                                                       MCP_Test_Time,
+                                                       MCP_Test_Status,
+                                                       pred.at = 60,
+                                                       ngroup = 3)
+
+print(MCP_Train_CoxPH_Model_ExternalCalibration)
+
+summary(MCP_Train_CoxPH_Model_ExternalCalibration)
+
+plot(MCP_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the MCP model
+# for the risk groups
+# using the test data
+##################################
+MCP_Test_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the MCP model
+# using the test data
+# for Year 10
+##################################
+MCP_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(MCP_Train_CoxPH_Fit,
+                                                       MCP_Train_Predictors,
+                                                       MCP_Train_Time,
+                                                       MCP_Train_Status,
+                                                       MCP_Test_Predictors,
+                                                       MCP_Test_Time,
+                                                       MCP_Test_Status,
+                                                       pred.at = 120,
+                                                       ngroup = 3)
+
+print(MCP_Train_CoxPH_Model_ExternalCalibration)
+
+summary(MCP_Train_CoxPH_Model_ExternalCalibration)
+
+plot(MCP_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the MCP model
+# for the risk groups
+# using the test data
+##################################
+MCP_Test_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
 
 ```
 
