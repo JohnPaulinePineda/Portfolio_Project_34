@@ -1557,6 +1557,270 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.3, warning=FALSE, message=FALSE}
+##################################
+# Loading the preprocessed data
+##################################
+PMA_PreModelling_ENET <- peakVO2.Source[,!names(peakVO2.Source) %in% rownames(UF_CoxPHModelSummary_NonSig)]
+
+##################################
+# Setting the appropriate variable types
+##################################
+PMA_PreModelling_ENET$died <- as.factor(PMA_PreModelling_ENET$died)
+
+##################################
+# Creating a local object
+# for the train and test sets
+##################################
+set.seed(88888888)
+TrainIndex <- createDataPartition(PMA_PreModelling_ENET$died, 
+                                  p = 0.8, 
+                                  list = FALSE, 
+                                  times = 1)
+
+PMA_PreModelling_ENET_Train <- PMA_PreModelling_ENET[ TrainIndex,]
+PMA_PreModelling_ENET_Test  <- PMA_PreModelling_ENET[-TrainIndex,]
+
+PMA_PreModelling_ENET_Train$died <- as.numeric(PMA_PreModelling_ENET_Train$died)
+PMA_PreModelling_ENET_Test$died  <- as.numeric(PMA_PreModelling_ENET_Test$died)
+
+##################################
+# Formulating the model components
+# for the train data
+##################################
+ENET_Train_Predictors <- as.matrix(
+  PMA_PreModelling_ENET_Train[,!names(PMA_PreModelling_ENET_Train) 
+                               %in% c("ttodead","died")])
+ENET_Train_Time    <- PMA_PreModelling_ENET_Train$ttodead
+ENET_Train_Status  <- PMA_PreModelling_ENET_Train$died
+ENET_Train_Response <- survival::Surv(ENET_Train_Time, ENET_Train_Status)
+
+##################################
+# Fitting a ENET model
+##################################
+ENET_Train_CoxPH_Fit <- fit_enet(ENET_Train_Predictors,
+                              ENET_Train_Response,
+                              nfolds = 5,
+                              alphas = seq(0.05, 0.95, 0.05),
+                              rule = "lambda.1se",
+                              seed = 88888888)
+
+##################################
+# Extracting the model objects and
+# optimal hyperparameters
+# from the ENET model
+##################################
+(ENET_Train_CoxPH_Model  <- ENET_Train_CoxPH_Fit$model)
+(ENET_Train_CoxPH_Model  <- ENET_Train_CoxPH_Fit$model$beta)
+(ENET_Train_CoxPH_Alpha  <- ENET_Train_CoxPH_Fit$alpha)
+(ENET_Train_CoxPH_Lambda <- ENET_Train_CoxPH_Fit$lambda)
+(ENET_Train_CoxPH_PenaltyFactor <- ENET_Train_CoxPH_Fit$pen_factor)
+
+##################################
+# Conducting an internal validation
+# of the ENET model
+# using a 50-cycle bootstrap
+##################################
+ENET_Train_CoxPH_Model_InternalValidation <- validate(ENET_Train_Predictors,
+                                                       ENET_Train_Time,
+                                                       ENET_Train_Status,
+                                                       model.type = "enet",
+                                                       alpha = ENET_Train_CoxPH_Fit$alpha,
+                                                       lambda = ENET_Train_CoxPH_Fit$lambda,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12),
+                                                       seed = 88888888)
+
+print(ENET_Train_CoxPH_Model_InternalValidation)
+
+summary(ENET_Train_CoxPH_Model_InternalValidation)
+
+ENET_Train_IV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(ENET_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  ENET_Train_IV_Summary[i,1] <- "ENET"
+  ENET_Train_IV_Summary[i,2] <- "Cross-Validation"
+  ENET_Train_IV_Summary[i,3] <- summary(ENET_Train_CoxPH_Model_InternalValidation)[[4,i]]
+}
+
+ENET_Train_IV_Summary
+
+plot(ENET_Train_CoxPH_Model_InternalValidation,
+     ylim = c(0, 1))
+
+##################################
+# Conducting an external validation
+# of the ENET model
+# using the test data
+##################################
+ENET_Test_Predictors <- as.matrix(
+  PMA_PreModelling_ENET_Test[,!names(PMA_PreModelling_ENET_Test)
+                               %in% c("ttodead","died")])
+ENET_Test_Time    <- PMA_PreModelling_ENET_Test$ttodead
+ENET_Test_Status  <- PMA_PreModelling_ENET_Test$died
+ENET_Test_Response <- survival::Surv(ENET_Test_Time, ENET_Test_Status)
+
+ENET_Train_CoxPH_Model_ExternalValidation <- validate_external(ENET_Train_CoxPH_Fit,
+                                                       ENET_Train_Predictors,
+                                                       ENET_Train_Time,
+                                                       ENET_Train_Status,
+                                                       ENET_Test_Predictors,
+                                                       ENET_Test_Time,
+                                                       ENET_Test_Status,
+                                                       tauc.type = "UNO",
+                                                       tauc.time = seq(12, 120, 12))
+
+print(ENET_Train_CoxPH_Model_ExternalValidation)
+
+summary(ENET_Train_CoxPH_Model_ExternalValidation)
+
+ENET_Train_EV_Summary <- data.frame(matrix(ncol=3, nrow=8))
+names(ENET_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC")
+
+for (i in 1:8){
+  ENET_Train_EV_Summary[i,1] <- "ENET"
+  ENET_Train_EV_Summary[i,2] <- "Test"
+  ENET_Train_EV_Summary[i,3] <- summary(ENET_Train_CoxPH_Model_ExternalValidation)[[1,i]]
+}
+
+ENET_Train_EV_Summary
+
+plot(ENET_Train_CoxPH_Model_ExternalValidation,
+     ylim = c(0, 1))
+
+##################################
+# Conducting an internal calibration
+# of the ENET model
+# using a 50-cycle bootstrap
+# for Year 5
+##################################
+ENET_Train_CoxPH_Model_InternalCalibration <- calibrate(ENET_Train_Predictors,
+                                                       ENET_Train_Time,
+                                                       ENET_Train_Status,
+                                                       model.type = "enet",
+                                                       alpha = ENET_Train_CoxPH_Fit$alpha,
+                                                       lambda = ENET_Train_CoxPH_Fit$lambda,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       pred.at = 60,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(ENET_Train_CoxPH_Model_InternalCalibration)
+
+summary(ENET_Train_CoxPH_Model_InternalCalibration)
+
+plot(ENET_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the ENET model
+# for the risk groups
+# using the train data
+##################################
+ENET_Train_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an internal calibration
+# of the ENET model
+# using a 50-cycle bootstrap
+# for Year 10
+##################################
+ENET_Train_CoxPH_Model_InternalCalibration <- calibrate(ENET_Train_Predictors,
+                                                       ENET_Train_Time,
+                                                       ENET_Train_Status,
+                                                       model.type = "enet",
+                                                       alpha = ENET_Train_CoxPH_Fit$alpha,
+                                                       lambda = ENET_Train_CoxPH_Fit$lambda,
+                                                       method = "bootstrap",
+                                                       boot.times = 50,
+                                                       pred.at = 120,
+                                                       ngroup = 3,
+                                                       seed = 88888888)
+
+print(ENET_Train_CoxPH_Model_InternalCalibration)
+
+summary(ENET_Train_CoxPH_Model_InternalCalibration)
+
+plot(ENET_Train_CoxPH_Model_InternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the ENET model
+# for the risk groups
+# using the train data
+##################################
+ENET_Train_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_InternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the ENET model
+# using the test data
+# for Year 5
+##################################
+ENET_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(ENET_Train_CoxPH_Fit,
+                                                       ENET_Train_Predictors,
+                                                       ENET_Train_Time,
+                                                       ENET_Train_Status,
+                                                       ENET_Test_Predictors,
+                                                       ENET_Test_Time,
+                                                       ENET_Test_Status,
+                                                       pred.at = 60,
+                                                       ngroup = 3)
+
+print(ENET_Train_CoxPH_Model_ExternalCalibration)
+
+summary(ENET_Train_CoxPH_Model_ExternalCalibration)
+
+plot(ENET_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the ENET model
+# for the risk groups
+# using the test data
+##################################
+ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
+
+##################################
+# Conducting an external calibration
+# of the ENET model
+# using the test data
+# for Year 10
+##################################
+ENET_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(ENET_Train_CoxPH_Fit,
+                                                       ENET_Train_Predictors,
+                                                       ENET_Train_Time,
+                                                       ENET_Train_Status,
+                                                       ENET_Test_Predictors,
+                                                       ENET_Test_Time,
+                                                       ENET_Test_Status,
+                                                       pred.at = 120,
+                                                       ngroup = 3)
+
+print(ENET_Train_CoxPH_Model_ExternalCalibration)
+
+summary(ENET_Train_CoxPH_Model_ExternalCalibration)
+
+plot(ENET_Train_CoxPH_Model_ExternalCalibration)
+
+##################################
+# Estimating survival curves
+# of the ENET model
+# for the risk groups
+# using the test data
+##################################
+ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibration,
+                                          group.name = c("High-Risk", "Medium-Risk", "Low-Risk"),
+                                          time.at = 1:10 * 12)
 
 ```
 
