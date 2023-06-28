@@ -2581,7 +2581,47 @@ SCAD_Test_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_ExternalCalibrati
 |
 | [Fused Least Absolute Shrinkage and Selection Operator](https://www.jstor.org/stable/3647602) is a regularization technique which extends the LASSO method by incorporating the concept of fused penalties, which encourages grouping or clustering of related variables. The method is aimed at identifying a subset of predictors that have a significant impact on survival outcomes while considering their interdependencies. The penalty term in the fused LASSO method consists of two components - the LASSO penalty and the fused penalty. The LASSO penalty promotes sparsity in the coefficients, forcing some coefficients to be zero. The fused penalty promotes grouping or clustering of related variables by penalizing the differences between neighboring coefficients. This enables the neighboring variables to be either all included or all excluded from the model. The tuning parameters lambda controls the amount of penalty applied. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, taking into account both the LASSO and fused penalties.
 |
+| **[A]** The method contains 3 hyperparameters:
+|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[A.2]** <span style="color: #FF0000">lambda1</span> = LASSO penalty made to vary across a range of values equal to 0.001 to 5.000
+|      **[A.3]** <span style="color: #FF0000">lambda2</span> = fused LASSO penalty made to vary across a range of values equal to 0.001 to 0.500
 |
+| **[B]** The method selected 3 out of the 25 predictors for the final Cox Proportional Hazards model. No information about the selected predictors are available.
+|
+| **[C]** Optimal model parameters were determined as:
+|      **[C.1]** Lambda1 = 5.000
+|      **[C.2]** Lambda2 = 0.001
+|
+| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[D.1]** 12 months = 0.72181
+|      **[D.2]** 24 months = 0.71095
+|      **[D.3]** 36 months = 0.62796
+|      **[D.4]** 48 months = 0.65079
+|      **[D.5]** 60 months = 0.63001
+|      **[D.6]** 72 months = 0.65456
+|      **[D.7]** 84 months = 0.71094
+|      **[D.8]** 96 months = 0.57652
+|      **[D.9]** 108 months = 0.76628
+|      **[D.10]** 120 months = 0.79072
+|
+| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.73644
+|      **[E.2]** 24 months = 0.70272
+|      **[E.3]** 36 months = 0.58654
+|      **[E.4]** 48 months = 0.61131
+|      **[E.5]** 60 months = 0.59972
+|      **[E.6]** 72 months = 0.63533
+|      **[E.7]** 84 months = 0.68976
+|      **[E.8]** 96 months = 0.86677
+|      **[E.9]** 108 months = 0.46055
+|      **[E.10]** 120 months = 0.62500
+|
+| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+|
+|
+
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.5, warning=FALSE, message=FALSE}
