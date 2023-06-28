@@ -1344,10 +1344,10 @@ print(LASSO_Train_CoxPH_Model_InternalValidation)
 
 summary(LASSO_Train_CoxPH_Model_InternalValidation)
 
-LASSO_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+LASSO_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(LASSO_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   LASSO_Train_IV_Summary[i,1] <- "LASSO"
   LASSO_Train_IV_Summary[i,2] <- "Cross-Validation"
   LASSO_Train_IV_Summary[i,3] <- summary(LASSO_Train_CoxPH_Model_InternalValidation)[[4,i]] 
@@ -1385,10 +1385,10 @@ print(LASSO_Train_CoxPH_Model_ExternalValidation)
 
 summary(LASSO_Train_CoxPH_Model_ExternalValidation)
 
-LASSO_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+LASSO_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(LASSO_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   LASSO_Train_EV_Summary[i,1] <- "LASSO"
   LASSO_Train_EV_Summary[i,2] <- "Test"
   LASSO_Train_EV_Summary[i,3] <- summary(LASSO_Train_CoxPH_Model_ExternalValidation)[[1,i]] 
@@ -1623,10 +1623,10 @@ print(ENET_Train_CoxPH_Model_InternalValidation)
 
 summary(ENET_Train_CoxPH_Model_InternalValidation)
 
-ENET_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+ENET_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(ENET_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   ENET_Train_IV_Summary[i,1] <- "ENET"
   ENET_Train_IV_Summary[i,2] <- "Cross-Validation"
   ENET_Train_IV_Summary[i,3] <- summary(ENET_Train_CoxPH_Model_InternalValidation)[[4,i]]
@@ -1664,10 +1664,10 @@ print(ENET_Train_CoxPH_Model_ExternalValidation)
 
 summary(ENET_Train_CoxPH_Model_ExternalValidation)
 
-ENET_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+ENET_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(ENET_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   ENET_Train_EV_Summary[i,1] <- "ENET"
   ENET_Train_EV_Summary[i,2] <- "Test"
   ENET_Train_EV_Summary[i,3] <- summary(ENET_Train_CoxPH_Model_ExternalValidation)[[1,i]]
@@ -1901,10 +1901,10 @@ print(MCP_Train_CoxPH_Model_InternalValidation)
 
 summary(MCP_Train_CoxPH_Model_InternalValidation)
 
-MCP_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+MCP_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(MCP_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   MCP_Train_IV_Summary[i,1] <- "MCP"
   MCP_Train_IV_Summary[i,2] <- "Cross-Validation"
   MCP_Train_IV_Summary[i,3] <- summary(MCP_Train_CoxPH_Model_InternalValidation)[[4,i]]
@@ -1942,10 +1942,10 @@ print(MCP_Train_CoxPH_Model_ExternalValidation)
 
 summary(MCP_Train_CoxPH_Model_ExternalValidation)
 
-MCP_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+MCP_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(MCP_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   MCP_Train_EV_Summary[i,1] <- "MCP"
   MCP_Train_EV_Summary[i,2] <- "Test"
   MCP_Train_EV_Summary[i,3] <- summary(MCP_Train_CoxPH_Model_ExternalValidation)[[1,i]]
@@ -2181,10 +2181,10 @@ print(SCAD_Train_CoxPH_Model_InternalValidation)
 
 summary(SCAD_Train_CoxPH_Model_InternalValidation)
 
-SCAD_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+SCAD_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(SCAD_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   SCAD_Train_IV_Summary[i,1] <- "SCAD"
   SCAD_Train_IV_Summary[i,2] <- "Cross-Validation"
   SCAD_Train_IV_Summary[i,3] <- summary(SCAD_Train_CoxPH_Model_InternalValidation)[[4,i]]
@@ -2222,10 +2222,10 @@ print(SCAD_Train_CoxPH_Model_ExternalValidation)
 
 summary(SCAD_Train_CoxPH_Model_ExternalValidation)
 
-SCAD_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+SCAD_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(SCAD_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   SCAD_Train_EV_Summary[i,1] <- "SCAD"
   SCAD_Train_EV_Summary[i,2] <- "Test"
   SCAD_Train_EV_Summary[i,3] <- summary(SCAD_Train_CoxPH_Model_ExternalValidation)[[1,i]]
@@ -2460,10 +2460,10 @@ print(FLASSO_Train_CoxPH_Model_InternalValidation)
 
 summary(FLASSO_Train_CoxPH_Model_InternalValidation)
 
-FLASSO_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+FLASSO_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(FLASSO_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   FLASSO_Train_IV_Summary[i,1] <- "FLASSO"
   FLASSO_Train_IV_Summary[i,2] <- "Cross-Validation"
   FLASSO_Train_IV_Summary[i,3] <- summary(FLASSO_Train_CoxPH_Model_InternalValidation)[[4,i]]
@@ -2501,10 +2501,10 @@ print(FLASSO_Train_CoxPH_Model_ExternalValidation)
 
 summary(FLASSO_Train_CoxPH_Model_ExternalValidation)
 
-FLASSO_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
+FLASSO_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=10))
 names(FLASSO_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
-for (i in 1:8){
+for (i in 1:10){
   FLASSO_Train_EV_Summary[i,1] <- "FLASSO"
   FLASSO_Train_EV_Summary[i,2] <- "Test"
   FLASSO_Train_EV_Summary[i,3] <- summary(FLASSO_Train_CoxPH_Model_ExternalValidation)[[1,i]]
@@ -2673,6 +2673,18 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
                          FLASSO_Train_IV_Summary,
                          FLASSO_Train_EV_Summary))
 
+TDAUROC_Summary$Model <- factor(TDAUROC_Summary$Model,
+                                levels = c("LASSO",
+                                           "ENET",
+                                           "MCP",
+                                           "SCAD",
+                                           "FLASSO"))
+
+TDAUROC_Summary$Time  <- as.factor(TDAUROC_Summary$Time)
+TDAUROC_Summary$Time  <- factor(TDAUROC_Summary$Time,
+                                levels= c("12","24","36","48","60",
+                                          "72","84","96","108","120"))
+
 (TDAUROC_Plot <- dotplot(Model ~ MedianTDAUROC | Time,
                          data = TDAUROC_Summary,
                          groups = Validation,
@@ -2684,7 +2696,8 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
                          origin = 0,
                          alpha = 0.45,
                          pch = 16,
-                         cex = 2))
+                         cex = 2,
+                         layout = c(5,2)))
 ```
 
 </details>
