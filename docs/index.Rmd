@@ -1280,8 +1280,8 @@ arrange_ggsurvplots(KMPlot_List,
 |      **[B.4]** <span style="color: #FF0000">bun</span> variable (numeric)
 |      **[B.5]** <span style="color: #FF0000">male</span> variable (factor)
 |
-| **[C]** Optimal penalty parameter setting was determined as:
-|      **[C.1]** Lambda=0.061
+| **[C]** Optimal model parameter was  was determined as:
+|      **[C.1]** Lambda = 0.061
 |
 | **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
 |      **[D.1]** 12 months = 0.75935
@@ -1295,7 +1295,7 @@ arrange_ggsurvplots(KMPlot_List,
 |      **[D.9]** 108 months = 0.67066
 |      **[D.10]** 120 months = 0.56227
 |
-| **[E]** Externally validated Time-Dependent AUROC metrics usng the test data showed good performance overall except for the last few time periods and are summarized as follows:
+| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
 |      **[E.1]** 12 months = 0.75529
 |      **[E.2]** 24 months = 0.74168
 |      **[E.3]** 36 months = 0.63662
@@ -1586,7 +1586,56 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 
 ###  1.5.2 Elastic Net (ENET)
 |
-| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regularization technique aimed at balancing between sparsity and including correlated predictors. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. The LASSO penalty promotes sparsity by encouraging some coefficients to be exactly zero, while the ridge penalty encourages shrinkage of coefficients towards zero. This method introduces two tuning parameters: lambda, which controls the overall amount of penalty applied, and alpha which which determines the trade-off between the LASSO and ridge penalties. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or proximal gradient methods, by iteratively updating regression coefficients, while considering both the LASSO and ridge penalties. This approach can be useful for striking a balance between sparsity and accounting for correlated predictors by effectively identifying important predictors while handling multicollinearity and improving both the interpretability and predictive performance of the survival model.
+| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regularization technique aimed at balancing between sparsity and including correlated predictors. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. The LASSO penalty promotes sparsity by encouraging some coefficients to be exactly zero, while the ridge penalty encourages shrinkage of coefficients towards zero. This method introduces two tuning parameters: lambda, which controls the overall amount of penalty applied, and alpha which determines the trade-off between the LASSO and ridge penalties. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or proximal gradient methods, by iteratively updating regression coefficients, while considering both the LASSO and ridge penalties. This approach can be useful for striking a balance between sparsity and accounting for correlated predictors by effectively identifying important predictors while handling multicollinearity and improving both the interpretability and predictive performance of the survival model.
+|
+| **[A]** The method contains 3 hyperparameters:
+|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[A.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
+|      **[A.3]** <span style="color: #FF0000">alphas</span> = elastic net mising parameter made to vary across a range of values equal to 0.05 to 0.95
+|
+| **[B]** The method selected 7 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[B.1]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[B.2]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
+|      **[B.3]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
+|      **[B.4]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[B.5]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[B.6]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[B.7]** <span style="color: #FF0000">male</span> variable (factor)
+|
+| **[C]** Optimal model parameters were determined as:
+|      **[C.1]** Lambda = 0.209
+|      **[C.2]** Alpha = 0.200
+|
+| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[D.1]** 12 months = 0.76568
+|      **[D.2]** 24 months = 0.77544
+|      **[D.3]** 36 months = 0.66988
+|      **[D.4]** 48 months = 0.67471
+|      **[D.5]** 60 months = 0.66267
+|      **[D.6]** 72 months = 0.67954
+|      **[D.7]** 84 months = 0.71874
+|      **[D.8]** 96 months = 0.60604
+|      **[D.9]** 108 months = 0.66103
+|      **[D.10]** 120 months = 0.46548
+|
+| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.77262
+|      **[E.2]** 24 months = 0.74574
+|      **[E.3]** 36 months = 0.63438
+|      **[E.4]** 48 months = 0.61830
+|      **[E.5]** 60 months = 0.65565
+|      **[E.6]** 72 months = 0.66441
+|      **[E.7]** 84 months = 0.62992
+|      **[E.8]** 96 months = 0.69808
+|      **[E.9]** 108 months = 0.41854
+|      **[E.10]** 120 months = 0.35000
+|
+| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+|
+|
+
 |
 |
 
