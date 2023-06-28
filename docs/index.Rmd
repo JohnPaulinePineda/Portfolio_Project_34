@@ -1591,7 +1591,7 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 | **[A]** The method contains 3 hyperparameters:
 |      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
 |      **[A.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
-|      **[A.3]** <span style="color: #FF0000">alphas</span> = elastic net mising parameter made to vary across a range of values equal to 0.05 to 0.95
+|      **[A.3]** <span style="color: #FF0000">alphas</span> = elastic net mixing parameter made to vary across a range of values equal to 0.05 to 0.95
 |
 | **[B]** The method selected 7 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
 |      **[B.1]** <span style="color: #FF0000">betablok</span> variable (factor)
@@ -1633,9 +1633,6 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 | **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
 |
 | **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
-|
-|
-
 |
 |
 
@@ -1916,7 +1913,59 @@ ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibrati
 |
 | [Minimax Concave Penalty](https://www.jstor.org/stable/25662264) is a regularization technique aimed at encouraging sparsity in the model by imposing folded concave penalty functions on the regression coefficients. The algorithm uses the tuning parameter lambda which controls the amount of penalty applied, and a shape parameter gamma which determines the concavity of the penalty function. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, while incorporating the MCP penalty. The MCP penalty retains the penalization rate (and bias) of the LASSO for small coefficients, but immedciately relaxes the rate of penalization as the absolute value of the coefficient increases. This approach can be useful for feature selection, allowing for the identification of a parsimonious set of predictors that significantly impact survival outcomes, while balancing the trade-off between model complexity and prediction.
 |
+| **[A]** The method contains 2 hyperparameters:
+|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[A.2]** <span style="color: #FF0000">gammas</span> = MCP penalty made to vary across a range of values equal to 2.10 to 5.00
 |
+| **[B]** The method selected 13 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[B.1]** <span style="color: #FF0000">age</span> variable (numeric)
+|      **[B.2]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[B.3]** <span style="color: #FF0000">acei</span> variable (factor)
+|      **[B.4]** <span style="color: #FF0000">aspirin</span> variable (factor)
+|      **[B.5]** <span style="color: #FF0000">insulin</span> variable (factor)
+|      **[B.6]** <span style="color: #FF0000">resting.systolic.bp</span> variable (numeric)
+|      **[B.7]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
+|      **[B.8]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
+|      **[B.9]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[B.10]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[B.11]** <span style="color: #FF0000">cad</span> variable (factor)
+|      **[B.12]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[B.13]** <span style="color: #FF0000">male</span> variable (factor)
+|
+| **[C]** Optimal model parameters were determined as:
+|      **[C.1]** Lambda = 0.014
+|      **[C.2]** Alpha = 4.000
+|
+| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[D.1]** 12 months = 0.76617
+|      **[D.2]** 24 months = 0.77818
+|      **[D.3]** 36 months = 0.68530
+|      **[D.4]** 48 months = 0.67992
+|      **[D.5]** 60 months = 0.66145
+|      **[D.6]** 72 months = 0.67633
+|      **[D.7]** 84 months = 0.68757
+|      **[D.8]** 96 months = 0.61512
+|      **[D.9]** 108 months = 0.62571
+|      **[D.10]** 120 months = 0.26660
+|
+| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.80360
+|      **[E.2]** 24 months = 0.74632
+|      **[E.3]** 36 months = 0.64447
+|      **[E.4]** 48 months = 0.60192
+|      **[E.5]** 60 months = 0.64827
+|      **[E.6]** 72 months = 0.60107
+|      **[E.7]** 84 months = 0.56609
+|      **[E.8]** 96 months = 0.65251
+|      **[E.9]** 108 months = 0.46980
+|      **[E.10]** 120 months = 0.27500
+|
+| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+|
+|
+
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.3, warning=FALSE, message=FALSE}
