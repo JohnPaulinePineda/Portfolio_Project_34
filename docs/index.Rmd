@@ -1,7 +1,7 @@
 ---
 title: "R : Exploring Penalized Models for Handling High-Dimensional Survival Data"
 author: "John Pauline Pineda"
-date: "June 29, 2023"
+date: "June 28, 2023"
 output: 
   html_document:
     toc: true
@@ -2895,7 +2895,17 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
 
 </details>
 
-##  1.6 Penalty Comparison Summary
+##  1.6 Penalized Model Comparison Summary
+|
+| Model performance comparison:
+|
+| **[A]** All models had considerably high time-dependent AUROC overall although most reported lower values (and wider confidence intervals) at the 108th and 120th time periods potentially due to lesser case numbers for these survival times.
+|
+| **[B]** The method which demonstrated consistent time-dependent AUROC across all the time periods was **FLASSO: Fused Least Absolute Shrinkage and Selection Operator** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) with the most optimal number of retained predictors at 3.
+|
+| **[C]** Lesser number of retained predictors were noted for the **LASSO: Least Absolute Shrinkage and Selection Operator** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) and **ENET: Elastic Net** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) methods with 5 and 7, respectively.
+|
+| **[C]** Time-dependent AUROC for the **MCP: Minimax Concave Penalty** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) and **SCAD: Smoothly Clipped Absolute Deviation** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) methods were comparable all across the time periods with retained number of predictors equal to 13 and 15, respectively.
 |
 |
 
