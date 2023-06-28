@@ -3034,3 +3034,7 @@ TDAUROC_Summary$Time  <- factor(TDAUROC_Summary$Time,
 | **[Publication]** [Variable Selection via Nonconcave Penalized Likelihood and its Oracle Properties](https://www.tandfonline.com/doi/abs/10.1198/016214501753382273) by Jianqing Fan and Runze Li (Journal of the American Statistical Association )
 | **[Publication]** [Sparsity and Smoothness via the Fused Lasso](https://www.jstor.org/stable/3647602) by Robert Tibshirani, Michael Saunders, Saharon Rosset, Ji Zhu and Keith Knight (Journal of the Royal Statistical Society)
 | **[Tutorial]** [Survival Analysis / Time-To-Event Analysis in R](https://campus.datacamp.com/courses/survival-analysis-in-r/what-is-survival-analysis?ex=1) by Heidi Seibold (Datacamp)
+|
+|
+|
+|
