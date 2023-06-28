@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 # **1. Table of Contents**
 |
-| This project explores different penalized regression methods for reducing model complexity in high-dimensional survival data using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. Methods applied in the analysis to force the regression estimators to shrink their coefficients in order to avoid the penalty terms imposed on the coefficients included the **Least Absolute Shrinkage and Selection Operator**, **Elastic Net**, **Minimax Concave Penalt**, **Smoothly Clipped Absolute Deviation** and **Fused Least Absolute Shrinkage and Selection Operator**. The predictive performance for each algorithm through the time-dependent area under the receiver operating characteristic curve (AUROC) metric was evaluated using internal bootstrap and external validation methods. Model calibration was similarly assessed by plotting the predicted probabilities from the model versus actual survival probabilities. The differences in survival time for different risk groups determined from the calibration analyses were additionally examined using the  Kaplan-Meier survival curves.
+| This project explores different regularization methods for reducing model complexity in high-dimensional survival data using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. Methods applied in the analysis to force the regression estimators to shrink their coefficients in order to avoid the penalty terms imposed on the coefficients included the **Least Absolute Shrinkage and Selection Operator**, **Elastic Net**, **Minimax Concave Penalt**, **Smoothly Clipped Absolute Deviation** and **Fused Least Absolute Shrinkage and Selection Operator**. The predictive performance for each algorithm through the time-dependent area under the receiver operating characteristic curve (AUROC) metric was evaluated using internal bootstrap and external validation methods. Model calibration was similarly assessed by plotting the predicted probabilities from the model versus actual survival probabilities. The differences in survival time for different risk groups determined from the calibration analyses were additionally examined using the  Kaplan-Meier survival curves.
 |
 | Penalized regression is a form of variable selection method aimed at reducing model complexity by seeking a smaller subset of informative variables. This process keeps all the predictor variables in the model but constrains (regularizes) the regression coefficients by shrinking them toward zero, in addition to setting some coefficients exactly equal to zero, and is directly built as extensions of standard regression coefficient estimation by incorporating a penalty in the loss function. The algorithms applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**ncvreg**</mark>, <mark style="background-color: #CCECFF">**survival**</mark>, <mark style="background-color: #CCECFF">**glmnet**</mark> and <mark style="background-color: #CCECFF">**penalized**</mark>packages) attempt to evaluate various penalties for over-confidence in the parameter estimates and accept a slightly worse fit in order to have a more parsimonious model.
 |
@@ -1268,6 +1268,48 @@ arrange_ggsurvplots(KMPlot_List,
 ###  1.5.1 Least Absolute Shrinkage and Selection Operator (LASSO)
 |
 | [Least Absolute Shrinkage and Selection Operator Regression](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) is a regularization technique aimed at encouraging sparsity in the model by imposing a penalty on the absolute values of the regression coefficients. The algorithm adds a penalty term (referred to as the L1 regularization) defined as the sum of the absolute values of the regression coefficients multiplied by a tuning parameter lambda which controls the amount of penalty applied. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or least-angle regression, by iteratively updating regression coefficients, while incorporating the LASSO penalty. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability.
+|
+| **[A]** The method contains 2 hyperparameters:
+|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[A.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
+|
+| **[B]** The method selected 5 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[B.1]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[B.2]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[B.3]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[B.4]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[B.5]** <span style="color: #FF0000">male</span> variable (factor)
+|
+| **[C]** Optimal penalty parameter setting was determined as:
+|      **[C.1]** Lambda=0.061
+|
+| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[D.1]** 12 months = 0.75935
+|      **[D.2]** 24 months = 0.76467
+|      **[D.3]** 36 months = 0.65817
+|      **[D.4]** 48 months = 0.66612
+|      **[D.5]** 60 months = 0.65673
+|      **[D.6]** 72 months = 0.67133
+|      **[D.7]** 84 months = 0.71603
+|      **[D.8]** 96 months = 0.59719
+|      **[D.9]** 108 months = 0.67066
+|      **[D.10]** 120 months = 0.56227
+|
+| **[E]** Externally validated Time-Dependent AUROC metrics usng the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.75529
+|      **[E.2]** 24 months = 0.74168
+|      **[E.3]** 36 months = 0.63662
+|      **[E.4]** 48 months = 0.62143
+|      **[E.5]** 60 months = 0.65494
+|      **[E.6]** 72 months = 0.67220
+|      **[E.7]** 84 months = 0.65163
+|      **[E.8]** 96 months = 0.73170
+|      **[E.9]** 108 months = 0.34070
+|      **[E.10]** 120 months = 0.32500
+|
+| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
 |
 |
 
