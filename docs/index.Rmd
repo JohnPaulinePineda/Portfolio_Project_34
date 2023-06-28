@@ -1345,7 +1345,7 @@ print(LASSO_Train_CoxPH_Model_InternalValidation)
 summary(LASSO_Train_CoxPH_Model_InternalValidation)
 
 LASSO_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(LASSO_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(LASSO_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   LASSO_Train_IV_Summary[i,1] <- "LASSO"
@@ -1386,7 +1386,7 @@ print(LASSO_Train_CoxPH_Model_ExternalValidation)
 summary(LASSO_Train_CoxPH_Model_ExternalValidation)
 
 LASSO_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(LASSO_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(LASSO_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   LASSO_Train_EV_Summary[i,1] <- "LASSO"
@@ -1624,7 +1624,7 @@ print(ENET_Train_CoxPH_Model_InternalValidation)
 summary(ENET_Train_CoxPH_Model_InternalValidation)
 
 ENET_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(ENET_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(ENET_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   ENET_Train_IV_Summary[i,1] <- "ENET"
@@ -1665,7 +1665,7 @@ print(ENET_Train_CoxPH_Model_ExternalValidation)
 summary(ENET_Train_CoxPH_Model_ExternalValidation)
 
 ENET_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(ENET_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(ENET_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   ENET_Train_EV_Summary[i,1] <- "ENET"
@@ -1902,7 +1902,7 @@ print(MCP_Train_CoxPH_Model_InternalValidation)
 summary(MCP_Train_CoxPH_Model_InternalValidation)
 
 MCP_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(MCP_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(MCP_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   MCP_Train_IV_Summary[i,1] <- "MCP"
@@ -1943,7 +1943,7 @@ print(MCP_Train_CoxPH_Model_ExternalValidation)
 summary(MCP_Train_CoxPH_Model_ExternalValidation)
 
 MCP_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(MCP_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(MCP_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   MCP_Train_EV_Summary[i,1] <- "MCP"
@@ -2182,7 +2182,7 @@ print(SCAD_Train_CoxPH_Model_InternalValidation)
 summary(SCAD_Train_CoxPH_Model_InternalValidation)
 
 SCAD_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(SCAD_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(SCAD_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   SCAD_Train_IV_Summary[i,1] <- "SCAD"
@@ -2223,7 +2223,7 @@ print(SCAD_Train_CoxPH_Model_ExternalValidation)
 summary(SCAD_Train_CoxPH_Model_ExternalValidation)
 
 SCAD_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(SCAD_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(SCAD_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   SCAD_Train_EV_Summary[i,1] <- "SCAD"
@@ -2461,7 +2461,7 @@ print(FLASSO_Train_CoxPH_Model_InternalValidation)
 summary(FLASSO_Train_CoxPH_Model_InternalValidation)
 
 FLASSO_Train_IV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(FLASSO_Train_IV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(FLASSO_Train_IV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   FLASSO_Train_IV_Summary[i,1] <- "FLASSO"
@@ -2502,7 +2502,7 @@ print(FLASSO_Train_CoxPH_Model_ExternalValidation)
 summary(FLASSO_Train_CoxPH_Model_ExternalValidation)
 
 FLASSO_Train_EV_Summary <- data.frame(matrix(ncol=4, nrow=8))
-names(FLASSO_Train_EV_Summary) <- c("Algorithm","Validation","MedianAUROC","Time")
+names(FLASSO_Train_EV_Summary) <- c("Model","Validation","MedianTDAUROC","Time")
 
 for (i in 1:8){
   FLASSO_Train_EV_Summary[i,1] <- "FLASSO"
@@ -2660,12 +2660,31 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
 
 ```{r section_1.6, warning=FALSE, message=FALSE}
 ##################################
-# Conducting an internal validation
-# of the ENET model
-# using a 50-cycle bootstrap
+# Consolidating all results
 ##################################
+(TDAUROC_Summary <- rbind(LASSO_Train_IV_Summary,
+                         LASSO_Train_EV_Summary,
+                         ENET_Train_IV_Summary,
+                         ENET_Train_EV_Summary,
+                         MCP_Train_IV_Summary,
+                         MCP_Train_EV_Summary,
+                         SCAD_Train_IV_Summary,
+                         SCAD_Train_EV_Summary,
+                         FLASSO_Train_IV_Summary,
+                         FLASSO_Train_EV_Summary))
 
-
+(TDAUROC_Plot <- dotplot(Model ~ MedianTDAUROC | Time,
+                         data = TDAUROC_Summary,
+                         groups = Validation,
+                         main = "Penalized Model Performance Comparison",
+                         ylab = "Model",
+                         xlab = "Time-Dependent AUROC",
+                         auto.key = list(adj = 1),
+                         type=c("p", "h"),   
+                         origin = 0,
+                         alpha = 0.45,
+                         pch = 16,
+                         cex = 2))
 ```
 
 </details>
