@@ -1,7 +1,7 @@
 ---
 title: "R : Exploring Penalized Models for Handling High-Dimensional Survival Data"
 author: "John Pauline Pineda"
-date: "June 30, 2023"
+date: "June 29, 2023"
 output: 
   html_document:
     toc: true
@@ -1267,8 +1267,7 @@ arrange_ggsurvplots(KMPlot_List,
 
 ###  1.5.1 Least Absolute Shrinkage and Selection Operator (LASSO)
 |
-|
-| [Least Absolute Shrinkage and Selection Operator Regression](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm adds a penalty term (referred to as the L1 regularization) to the regression cost function that is proportional to the absolute value of the coefficients. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability. A hyperparameter fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
+| [Least Absolute Shrinkage and Selection Operator Regression](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) is a regularization technique aimed at encouraging sparsity in the model by imposing a penalty on the absolute values of the regression coefficients. The algorithm adds a penalty term (referred to as the L1 regularization) defined as the sum of the absolute values of the regression coefficients multiplied by a tuning parameter lambda which controls the amount of penalty applied. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or least-angle regression, by iteratively updating regression coefficients, while incorporating the LASSO penalty. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability.
 |
 |
 
@@ -1545,7 +1544,7 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 
 ###  1.5.2 Elastic Net (ENET)
 |
-| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. This approach can be useful when there are many predictor variables that are correlated with the response variable, but only a subset of them are truly important for predicting the response. The L1 regularization term can help to select the important variables, while the L2 regularization term can help to reduce the magnitude of the coefficients. Hyperparameters lambda that controls the weighting of the L2 regularization to the loss function, and fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
+| [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regularization technique aimed at balancing between sparsity and including correlated predictors. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. The LASSO penalty promotes sparsity by encouraging some coefficients to be exactly zero, while the ridge penalty encourages shrinkage of coefficients towards zero. This method introduces two tuning parameters: lambda, which controls the overall amount of penalty applied, and alpha which which determines the trade-off between the LASSO and ridge penalties. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or proximal gradient methods, by iteratively updating regression coefficients, while considering both the LASSO and ridge penalties. This approach can be useful for striking a balance between sparsity and accounting for correlated predictors by effectively identifying important predictors while handling multicollinearity and improving both the interpretability and predictive performance of the survival model.
 |
 |
 
@@ -1824,9 +1823,9 @@ ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibrati
 
 ###  1.5.3 Minimax Concave Penalty (MCP)
 |
+| [Minimax Concave Penalty](https://www.jstor.org/stable/25662264) is a regularization technique aimed at encouraging sparsity in the model by imposing folded concave penalty functions on the regression coefficients. The algorithm uses the tuning parameter lambda which controls the amount of penalty applied, and a shape parameter gamma which determines the concavity of the penalty function. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, while incorporating the MCP penalty. The MCP penalty retains the penalization rate (and bias) of the LASSO for small coefficients, but immedciately relaxes the rate of penalization as the absolute value of the coefficient increases. This approach can be useful for feature selection, allowing for the identification of a parsimonious set of predictors that significantly impact survival outcomes, while balancing the trade-off between model complexity and prediction.
 |
-| [Minimax Concave Penalty](https://www.jstor.org/stable/25662264) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm adds a penalty term (referred to as the L1 regularization) to the regression cost function that is proportional to the absolute value of the coefficients. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability. A hyperparameter fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
-
+|
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.3, warning=FALSE, message=FALSE}
@@ -2105,9 +2104,9 @@ MCP_Test_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_ExternalCalibration
 
 ###  1.5.4 Smoothly Clipped Absolute Deviation (SCAD)
 |
+| [Smoothly Clipped Absolute Deviation](https://www.tandfonline.com/doi/abs/10.1198/016214501753382273) is a regularization technique aimed at encouraging sparsity in the model by imposing folded concave penalty functions on the regression coefficients. The algorithm uses the tuning parameter lambda which controls the amount of penalty applied, and a shape parameter gamma which determines the concavity of the penalty function. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, while incorporating the SCAD penalty. The SCAD penalty retains the penalization rate (and bias) of the LASSO for small coefficients, but continuously relaxes the rate of penalization by remaining flat for a while before decreasing as the absolute value of the coefficient increases. This approach can be useful for feature selection, allowing for the identification of a parsimonious set of predictors that significantly impact survival outcomes, while balancing the trade-off between model complexity and prediction.
 |
-| [Smoothly Clipped Absolute Deviation](https://www.tandfonline.com/doi/abs/10.1198/016214501753382273) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm adds a penalty term (referred to as the L1 regularization) to the regression cost function that is proportional to the absolute value of the coefficients. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability. A hyperparameter fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
-
+|
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.4, warning=FALSE, message=FALSE}
@@ -2386,9 +2385,9 @@ SCAD_Test_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_ExternalCalibrati
 
 ###  1.5.5 Fused Least Absolute Shrinkage and Selection Operator (FLASSO)
 |
+| [Fused Least Absolute Shrinkage and Selection Operator](https://www.jstor.org/stable/3647602) is a regularization technique which extends the LASSO method by incorporating the concept of fused penalties, which encourages grouping or clustering of related variables. The method is aimed at identifying a subset of predictors that have a significant impact on survival outcomes while considering their interdependencies. The penalty term in the fused LASSO method consists of two components - the LASSO penalty and the fused penalty. The LASSO penalty promotes sparsity in the coefficients, forcing some coefficients to be zero. The fused penalty promotes grouping or clustering of related variables by penalizing the differences between neighboring coefficients. This enables the neighboring variables to be either all included or all excluded from the model. The tuning parameters lambda controls the amount of penalty applied. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, taking into account both the LASSO and fused penalties.
 |
-| [Fused Least Absolute Shrinkage and Selection Operator](https://www.jstor.org/stable/3647602) is a regression technique aimed at preventing overfitting when the model is too complex and fits the training data very closely, but performs poorly on new and unseen data. The algorithm adds a penalty term (referred to as the L1 regularization) to the regression cost function that is proportional to the absolute value of the coefficients. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability. A hyperparameter fraction that controls the ratio of the L1 norm of the coefficient vector relative to the norm at the full solution needs to be optimized through cross-validation.
-
+|
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.5.5, warning=FALSE, message=FALSE}
