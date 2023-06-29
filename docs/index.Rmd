@@ -1269,47 +1269,49 @@ arrange_ggsurvplots(KMPlot_List,
 |
 | [Least Absolute Shrinkage and Selection Operator Regression](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x) is a regularization technique aimed at encouraging sparsity in the model by imposing a penalty on the absolute values of the regression coefficients. The algorithm adds a penalty term (referred to as the L1 regularization) defined as the sum of the absolute values of the regression coefficients multiplied by a tuning parameter lambda which controls the amount of penalty applied. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or least-angle regression, by iteratively updating regression coefficients, while incorporating the LASSO penalty. This approach can be useful for feature selection, as it tends to shrink the coefficients of less important predictor variables to zero, which can help simplify the model and improve its interpretability.
 |
-| **[A]** The method contains 2 hyperparameters:
-|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
-|      **[A.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
+| **[A]** The multivariate Cox proportional hazards regression model from the  <mark style="background-color: #CCECFF">**survival**</mark> package was implemented with the LASSO penalty function applied using the <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**glmnet**</mark> packages. 
 |
-| **[B]** The method selected 5 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
-|      **[B.1]** <span style="color: #FF0000">betablok</span> variable (factor)
-|      **[B.2]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
-|      **[B.3]** <span style="color: #FF0000">interval</span> variable (numeric)
-|      **[B.4]** <span style="color: #FF0000">bun</span> variable (numeric)
-|      **[B.5]** <span style="color: #FF0000">male</span> variable (factor)
+| **[B]** The method contains 2 hyperparameters:
+|      **[B.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[B.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
 |
-| **[C]** Optimal model parameter was  was determined as:
-|      **[C.1]** Lambda = 0.061
+| **[C]** The method selected 5 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[C.1]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[C.2]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[C.3]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[C.4]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[C.5]** <span style="color: #FF0000">male</span> variable (factor)
 |
-| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[D.1]** 12 months = 0.75935
-|      **[D.2]** 24 months = 0.76467
-|      **[D.3]** 36 months = 0.65817
-|      **[D.4]** 48 months = 0.66612
-|      **[D.5]** 60 months = 0.65673
-|      **[D.6]** 72 months = 0.67133
-|      **[D.7]** 84 months = 0.71603
-|      **[D.8]** 96 months = 0.59719
-|      **[D.9]** 108 months = 0.67066
-|      **[D.10]** 120 months = 0.56227
+| **[D]** Optimal model parameter was  was determined as:
+|      **[D.1]** Lambda = 0.061
 |
-| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[E.1]** 12 months = 0.75529
-|      **[E.2]** 24 months = 0.74168
-|      **[E.3]** 36 months = 0.63662
-|      **[E.4]** 48 months = 0.62143
-|      **[E.5]** 60 months = 0.65494
-|      **[E.6]** 72 months = 0.67220
-|      **[E.7]** 84 months = 0.65163
-|      **[E.8]** 96 months = 0.73170
-|      **[E.9]** 108 months = 0.34070
-|      **[E.10]** 120 months = 0.32500
+| **[E]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.75935
+|      **[E.2]** 24 months = 0.76467
+|      **[E.3]** 36 months = 0.65817
+|      **[E.4]** 48 months = 0.66612
+|      **[E.5]** 60 months = 0.65673
+|      **[E.6]** 72 months = 0.67133
+|      **[E.7]** 84 months = 0.71603
+|      **[E.8]** 96 months = 0.59719
+|      **[E.9]** 108 months = 0.67066
+|      **[E.10]** 120 months = 0.56227
 |
-| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+| **[F]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[F.1]** 12 months = 0.75529
+|      **[F.2]** 24 months = 0.74168
+|      **[F.3]** 36 months = 0.63662
+|      **[F.4]** 48 months = 0.62143
+|      **[F.5]** 60 months = 0.65494
+|      **[F.6]** 72 months = 0.67220
+|      **[F.7]** 84 months = 0.65163
+|      **[F.8]** 96 months = 0.73170
+|      **[F.9]** 108 months = 0.34070
+|      **[F.10]** 120 months = 0.32500
 |
-| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+| **[G]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[H]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
 |
 |
 
@@ -1588,51 +1590,53 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 |
 | [Elastic Net Regression](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2005.00503.x) is a regularization technique aimed at balancing between sparsity and including correlated predictors. The algorithm is a combination of the ridge and LASSO regression methods, by adding both L1 and L2 regularization terms in the cost function. The LASSO penalty promotes sparsity by encouraging some coefficients to be exactly zero, while the ridge penalty encourages shrinkage of coefficients towards zero. This method introduces two tuning parameters: lambda, which controls the overall amount of penalty applied, and alpha which determines the trade-off between the LASSO and ridge penalties. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent or proximal gradient methods, by iteratively updating regression coefficients, while considering both the LASSO and ridge penalties. This approach can be useful for striking a balance between sparsity and accounting for correlated predictors by effectively identifying important predictors while handling multicollinearity and improving both the interpretability and predictive performance of the survival model.
 |
-| **[A]** The method contains 3 hyperparameters:
-|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
-|      **[A.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
-|      **[A.3]** <span style="color: #FF0000">alphas</span> = elastic net mixing parameter made to vary across a range of values equal to 0.05 to 0.95
+| **[A]** The multivariate Cox proportional hazards regression model from the  <mark style="background-color: #CCECFF">**survival**</mark> package was implemented with the ENET penalty function applied using the <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**glmnet**</mark> packages.
 |
-| **[B]** The method selected 7 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
-|      **[B.1]** <span style="color: #FF0000">betablok</span> variable (factor)
-|      **[B.2]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
-|      **[B.3]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
-|      **[B.4]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
-|      **[B.5]** <span style="color: #FF0000">interval</span> variable (numeric)
-|      **[B.6]** <span style="color: #FF0000">bun</span> variable (numeric)
-|      **[B.7]** <span style="color: #FF0000">male</span> variable (factor)
+| **[B]** The method contains 3 hyperparameters:
+|      **[B.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[B.2]** <span style="color: #FF0000">rule</span> = model selection criterion fixed at a setting of optimal lambda such that error is within 1 standard error of the minimum
+|      **[B.3]** <span style="color: #FF0000">alphas</span> = elastic net mixing parameter made to vary across a range of values equal to 0.05 to 0.95
 |
-| **[C]** Optimal model parameters were determined as:
-|      **[C.1]** Lambda = 0.209
-|      **[C.2]** Alpha = 0.200
+| **[C]** The method selected 7 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[C.1]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[C.2]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
+|      **[C.3]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
+|      **[C.4]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[C.5]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[C.6]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[C.7]** <span style="color: #FF0000">male</span> variable (factor)
 |
-| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[D.1]** 12 months = 0.76568
-|      **[D.2]** 24 months = 0.77544
-|      **[D.3]** 36 months = 0.66988
-|      **[D.4]** 48 months = 0.67471
-|      **[D.5]** 60 months = 0.66267
-|      **[D.6]** 72 months = 0.67954
-|      **[D.7]** 84 months = 0.71874
-|      **[D.8]** 96 months = 0.60604
-|      **[D.9]** 108 months = 0.66103
-|      **[D.10]** 120 months = 0.46548
+| **[D]** Optimal model parameters were determined as:
+|      **[D.1]** Lambda = 0.209
+|      **[D.2]** Alpha = 0.200
 |
-| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[E.1]** 12 months = 0.77262
-|      **[E.2]** 24 months = 0.74574
-|      **[E.3]** 36 months = 0.63438
-|      **[E.4]** 48 months = 0.61830
-|      **[E.5]** 60 months = 0.65565
-|      **[E.6]** 72 months = 0.66441
-|      **[E.7]** 84 months = 0.62992
-|      **[E.8]** 96 months = 0.69808
-|      **[E.9]** 108 months = 0.41854
-|      **[E.10]** 120 months = 0.35000
+| **[E]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.76568
+|      **[E.2]** 24 months = 0.77544
+|      **[E.3]** 36 months = 0.66988
+|      **[E.4]** 48 months = 0.67471
+|      **[E.5]** 60 months = 0.66267
+|      **[E.6]** 72 months = 0.67954
+|      **[E.7]** 84 months = 0.71874
+|      **[E.8]** 96 months = 0.60604
+|      **[E.9]** 108 months = 0.66103
+|      **[E.10]** 120 months = 0.46548
 |
-| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+| **[F]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[F.1]** 12 months = 0.77262
+|      **[F.2]** 24 months = 0.74574
+|      **[F.3]** 36 months = 0.63438
+|      **[F.4]** 48 months = 0.61830
+|      **[F.5]** 60 months = 0.65565
+|      **[F.6]** 72 months = 0.66441
+|      **[F.7]** 84 months = 0.62992
+|      **[F.8]** 96 months = 0.69808
+|      **[F.9]** 108 months = 0.41854
+|      **[F.10]** 120 months = 0.35000
 |
-| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+| **[G]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[H]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
 |
 |
 
@@ -1913,56 +1917,58 @@ ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibrati
 |
 | [Minimax Concave Penalty](https://www.jstor.org/stable/25662264) is a regularization technique aimed at encouraging sparsity in the model by imposing folded concave penalty functions on the regression coefficients. The algorithm uses the tuning parameter lambda which controls the amount of penalty applied, and a shape parameter gamma which determines the concavity of the penalty function. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, while incorporating the MCP penalty. The MCP penalty retains the penalization rate (and bias) of the LASSO for small coefficients, but immedciately relaxes the rate of penalization as the absolute value of the coefficient increases. This approach can be useful for feature selection, allowing for the identification of a parsimonious set of predictors that significantly impact survival outcomes, while balancing the trade-off between model complexity and prediction.
 |
-| **[A]** The method contains 2 hyperparameters:
-|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
-|      **[A.2]** <span style="color: #FF0000">gammas</span> = MCP penalty made to vary across a range of values equal to 2.10 to 5.00
+| **[A]** The multivariate Cox proportional hazards regression model from the  <mark style="background-color: #CCECFF">**survival**</mark> package was implemented with the MCP penalty function applied using the <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**ncvreg**</mark> packages.
 |
-| **[B]** The method selected 13 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
-|      **[B.1]** <span style="color: #FF0000">age</span> variable (numeric)
-|      **[B.2]** <span style="color: #FF0000">betablok</span> variable (factor)
-|      **[B.3]** <span style="color: #FF0000">acei</span> variable (factor)
-|      **[B.4]** <span style="color: #FF0000">aspirin</span> variable (factor)
-|      **[B.5]** <span style="color: #FF0000">insulin</span> variable (factor)
-|      **[B.6]** <span style="color: #FF0000">resting.systolic.bp</span> variable (numeric)
-|      **[B.7]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
-|      **[B.8]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
-|      **[B.9]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
-|      **[B.10]** <span style="color: #FF0000">interval</span> variable (numeric)
-|      **[B.11]** <span style="color: #FF0000">cad</span> variable (factor)
-|      **[B.12]** <span style="color: #FF0000">bun</span> variable (numeric)
-|      **[B.13]** <span style="color: #FF0000">male</span> variable (factor)
+| **[B]** The method contains 2 hyperparameters:
+|      **[B.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[B.2]** <span style="color: #FF0000">gammas</span> = MCP penalty made to vary across a range of values equal to 2.10 to 5.00
 |
-| **[C]** Optimal model parameters were determined as:
-|      **[C.1]** Lambda = 0.014
-|      **[C.2]** Gamma = 4.000
+| **[C]** The method selected 13 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[C.1]** <span style="color: #FF0000">age</span> variable (numeric)
+|      **[C.2]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[C.3]** <span style="color: #FF0000">acei</span> variable (factor)
+|      **[C.4]** <span style="color: #FF0000">aspirin</span> variable (factor)
+|      **[C.5]** <span style="color: #FF0000">insulin</span> variable (factor)
+|      **[C.6]** <span style="color: #FF0000">resting.systolic.bp</span> variable (numeric)
+|      **[C.7]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
+|      **[C.8]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
+|      **[C.9]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[C.10]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[C.11]** <span style="color: #FF0000">cad</span> variable (factor)
+|      **[C.12]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[C.13]** <span style="color: #FF0000">male</span> variable (factor)
 |
-| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[D.1]** 12 months = 0.76617
-|      **[D.2]** 24 months = 0.77818
-|      **[D.3]** 36 months = 0.68530
-|      **[D.4]** 48 months = 0.67992
-|      **[D.5]** 60 months = 0.66145
-|      **[D.6]** 72 months = 0.67633
-|      **[D.7]** 84 months = 0.68757
-|      **[D.8]** 96 months = 0.61512
-|      **[D.9]** 108 months = 0.62571
-|      **[D.10]** 120 months = 0.26660
+| **[D]** Optimal model parameters were determined as:
+|      **[D.1]** Lambda = 0.014
+|      **[D.2]** Gamma = 4.000
 |
-| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[E.1]** 12 months = 0.80360
-|      **[E.2]** 24 months = 0.74632
-|      **[E.3]** 36 months = 0.64447
-|      **[E.4]** 48 months = 0.60192
-|      **[E.5]** 60 months = 0.64827
-|      **[E.6]** 72 months = 0.60107
-|      **[E.7]** 84 months = 0.56609
-|      **[E.8]** 96 months = 0.65251
-|      **[E.9]** 108 months = 0.46980
-|      **[E.10]** 120 months = 0.27500
+| **[E]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.76617
+|      **[E.2]** 24 months = 0.77818
+|      **[E.3]** 36 months = 0.68530
+|      **[E.4]** 48 months = 0.67992
+|      **[E.5]** 60 months = 0.66145
+|      **[E.6]** 72 months = 0.67633
+|      **[E.7]** 84 months = 0.68757
+|      **[E.8]** 96 months = 0.61512
+|      **[E.9]** 108 months = 0.62571
+|      **[E.10]** 120 months = 0.26660
 |
-| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+| **[F]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[F.1]** 12 months = 0.80360
+|      **[F.2]** 24 months = 0.74632
+|      **[F.3]** 36 months = 0.64447
+|      **[F.4]** 48 months = 0.60192
+|      **[F.5]** 60 months = 0.64827
+|      **[F.6]** 72 months = 0.60107
+|      **[F.7]** 84 months = 0.56609
+|      **[F.8]** 96 months = 0.65251
+|      **[F.9]** 108 months = 0.46980
+|      **[F.10]** 120 months = 0.27500
 |
-| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+| **[G]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[H]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
 |
 |
 
@@ -2246,58 +2252,60 @@ MCP_Test_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_ExternalCalibration
 |
 | [Smoothly Clipped Absolute Deviation](https://www.tandfonline.com/doi/abs/10.1198/016214501753382273) is a regularization technique aimed at encouraging sparsity in the model by imposing folded concave penalty functions on the regression coefficients. The algorithm uses the tuning parameter lambda which controls the amount of penalty applied, and a shape parameter gamma which determines the concavity of the penalty function. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, while incorporating the SCAD penalty. The SCAD penalty retains the penalization rate (and bias) of the LASSO for small coefficients, but continuously relaxes the rate of penalization by remaining flat for a while before decreasing as the absolute value of the coefficient increases. This approach can be useful for feature selection, allowing for the identification of a parsimonious set of predictors that significantly impact survival outcomes, while balancing the trade-off between model complexity and prediction.
 |
-| **[A]** The method contains 2 hyperparameters:
-|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
-|      **[A.2]** <span style="color: #FF0000">gammas</span> = MCP penalty made to vary across a range of values equal to 2.10 to 5.00
+| **[A]** The multivariate Cox proportional hazards regression model from the  <mark style="background-color: #CCECFF">**survival**</mark> package was implemented with the SCAD penalty function applied using the <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**ncvreg**</mark> packages.
 |
-| **[B]** The method selected 15 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
-|      **[B.1]** <span style="color: #FF0000">age</span> variable (numeric)
-|      **[B.2]** <span style="color: #FF0000">betablok</span> variable (factor)
-|      **[B.3]** <span style="color: #FF0000">acei</span> variable (factor)
-|      **[B.4]** <span style="color: #FF0000">aspirin</span> variable (factor)
-|      **[B.5]** <span style="color: #FF0000">diuretic.thiazide</span> variable (factor)
-|      **[B.6]** <span style="color: #FF0000">insulin</span> variable (factor)
-|      **[B.7]** <span style="color: #FF0000">resting.systolic.bp</span> variable (numeric)
-|      **[B.8]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
-|      **[B.9]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
-|      **[B.10]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
-|      **[B.11]** <span style="color: #FF0000">interval</span> variable (numeric)
-|      **[B.12]** <span style="color: #FF0000">cad</span> variable (factor)
-|      **[B.13]** <span style="color: #FF0000">bun</span> variable (numeric)
-|      **[B.14]** <span style="color: #FF0000">sodium</span> variable (numeric)
-|      **[B.15]** <span style="color: #FF0000">male</span> variable (factor)
+| **[B]** The method contains 2 hyperparameters:
+|      **[B.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[B.2]** <span style="color: #FF0000">gammas</span> = MCP penalty made to vary across a range of values equal to 2.10 to 5.00
 |
-| **[C]** Optimal model parameters were determined as:
-|      **[C.1]** Lambda = 0.011
-|      **[C.2]** Gamma = 5.000
+| **[C]** The method selected 15 out of the 25 predictors for the final Cox Proportional Hazards model as follows:
+|      **[C.1]** <span style="color: #FF0000">age</span> variable (numeric)
+|      **[C.2]** <span style="color: #FF0000">betablok</span> variable (factor)
+|      **[C.3]** <span style="color: #FF0000">acei</span> variable (factor)
+|      **[C.4]** <span style="color: #FF0000">aspirin</span> variable (factor)
+|      **[C.5]** <span style="color: #FF0000">diuretic.thiazide</span> variable (factor)
+|      **[C.6]** <span style="color: #FF0000">insulin</span> variable (factor)
+|      **[C.7]** <span style="color: #FF0000">resting.systolic.bp</span> variable (numeric)
+|      **[C.8]** <span style="color: #FF0000">resting.hr</span> variable (numeric)
+|      **[C.9]** <span style="color: #FF0000">lvef.metabl</span> variable (numeric)
+|      **[C.10]** <span style="color: #FF0000">peak.vo2</span> variable (numeric)
+|      **[C.11]** <span style="color: #FF0000">interval</span> variable (numeric)
+|      **[C.12]** <span style="color: #FF0000">cad</span> variable (factor)
+|      **[C.13]** <span style="color: #FF0000">bun</span> variable (numeric)
+|      **[C.14]** <span style="color: #FF0000">sodium</span> variable (numeric)
+|      **[C.15]** <span style="color: #FF0000">male</span> variable (factor)
 |
-| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[D.1]** 12 months = 0.76617
-|      **[D.2]** 24 months = 0.77818
-|      **[D.3]** 36 months = 0.68530
-|      **[D.4]** 48 months = 0.67992
-|      **[D.5]** 60 months = 0.66145
-|      **[D.6]** 72 months = 0.67633
-|      **[D.7]** 84 months = 0.68757
-|      **[D.8]** 96 months = 0.61512
-|      **[D.9]** 108 months = 0.62571
-|      **[D.10]** 120 months = 0.26660
+| **[D]** Optimal model parameters were determined as:
+|      **[D.1]** Lambda = 0.011
+|      **[D.2]** Gamma = 5.000
 |
-| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[E.1]** 12 months = 0.80297
-|      **[E.2]** 24 months = 0.74514
-|      **[E.3]** 36 months = 0.64428
-|      **[E.4]** 48 months = 0.60077
-|      **[E.5]** 60 months = 0.64891
-|      **[E.6]** 72 months = 0.60476
-|      **[E.7]** 84 months = 0.56636
-|      **[E.8]** 96 months = 0.65165
-|      **[E.9]** 108 months = 0.45666
-|      **[E.10]** 120 months = 0.27500
+| **[E]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.76617
+|      **[E.2]** 24 months = 0.77818
+|      **[E.3]** 36 months = 0.68530
+|      **[E.4]** 48 months = 0.67992
+|      **[E.5]** 60 months = 0.66145
+|      **[E.6]** 72 months = 0.67633
+|      **[E.7]** 84 months = 0.68757
+|      **[E.8]** 96 months = 0.61512
+|      **[E.9]** 108 months = 0.62571
+|      **[E.10]** 120 months = 0.26660
 |
-| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+| **[F]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[F.1]** 12 months = 0.80297
+|      **[F.2]** 24 months = 0.74514
+|      **[F.3]** 36 months = 0.64428
+|      **[F.4]** 48 months = 0.60077
+|      **[F.5]** 60 months = 0.64891
+|      **[F.6]** 72 months = 0.60476
+|      **[F.7]** 84 months = 0.56636
+|      **[F.8]** 96 months = 0.65165
+|      **[F.9]** 108 months = 0.45666
+|      **[F.10]** 120 months = 0.27500
 |
-| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+| **[G]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[H]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
 |
 |
 
@@ -2581,44 +2589,46 @@ SCAD_Test_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_ExternalCalibrati
 |
 | [Fused Least Absolute Shrinkage and Selection Operator](https://www.jstor.org/stable/3647602) is a regularization technique which extends the LASSO method by incorporating the concept of fused penalties, which encourages grouping or clustering of related variables. The method is aimed at identifying a subset of predictors that have a significant impact on survival outcomes while considering their interdependencies. The penalty term in the fused LASSO method consists of two components - the LASSO penalty and the fused penalty. The LASSO penalty promotes sparsity in the coefficients, forcing some coefficients to be zero. The fused penalty promotes grouping or clustering of related variables by penalizing the differences between neighboring coefficients. This enables the neighboring variables to be either all included or all excluded from the model. The tuning parameters lambda controls the amount of penalty applied. The method formulates an optimization problem that minimizes the negative log-partial likelihood of the Cox proportional hazards model subject to the penalty terms. The optimization problem is solved using coordinate descent, by iteratively updating regression coefficients, taking into account both the LASSO and fused penalties.
 |
-| **[A]** The method contains 3 hyperparameters:
-|      **[A.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
-|      **[A.2]** <span style="color: #FF0000">lambda1</span> = LASSO penalty made to vary across a range of values equal to 0.001 to 5.000
-|      **[A.3]** <span style="color: #FF0000">lambda2</span> = fused LASSO penalty made to vary across a range of values equal to 0.001 to 0.500
+| **[A]** The multivariate Cox proportional hazards regression model from the  <mark style="background-color: #CCECFF">**survival**</mark> package was implemented with the FLASSO penalty function applied using the <mark style="background-color: #CCECFF">**hdnom**</mark> and <mark style="background-color: #CCECFF">**penalized**</mark> packages.
 |
-| **[B]** The method selected 3 out of the 25 predictors for the final Cox Proportional Hazards model. No information about the selected predictors are available.
+| **[B]** The method contains 3 hyperparameters:
+|      **[B.1]** <span style="color: #FF0000">nfolds</span> = fold numbers of cross-validation fixed at a value = 5
+|      **[B.2]** <span style="color: #FF0000">lambda1</span> = LASSO penalty made to vary across a range of values equal to 0.001 to 5.000
+|      **[B.3]** <span style="color: #FF0000">lambda2</span> = fused LASSO penalty made to vary across a range of values equal to 0.001 to 0.500
 |
-| **[C]** Optimal model parameters were determined as:
-|      **[C.1]** Lambda1 = 5.000
-|      **[C.2]** Lambda2 = 0.001
+| **[C]** The method selected 3 out of the 25 predictors for the final Cox Proportional Hazards model. No information about the selected predictors are available.
 |
-| **[D]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[D.1]** 12 months = 0.72181
-|      **[D.2]** 24 months = 0.71095
-|      **[D.3]** 36 months = 0.62796
-|      **[D.4]** 48 months = 0.65079
-|      **[D.5]** 60 months = 0.63001
-|      **[D.6]** 72 months = 0.65456
-|      **[D.7]** 84 months = 0.71094
-|      **[D.8]** 96 months = 0.57652
-|      **[D.9]** 108 months = 0.76628
-|      **[D.10]** 120 months = 0.79072
+| **[D]** Optimal model parameters were determined as:
+|      **[D.1]** Lambda1 = 5.000
+|      **[D.2]** Lambda2 = 0.001
 |
-| **[E]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
-|      **[E.1]** 12 months = 0.73644
-|      **[E.2]** 24 months = 0.70272
-|      **[E.3]** 36 months = 0.58654
-|      **[E.4]** 48 months = 0.61131
-|      **[E.5]** 60 months = 0.59972
-|      **[E.6]** 72 months = 0.63533
-|      **[E.7]** 84 months = 0.68976
-|      **[E.8]** 96 months = 0.86677
-|      **[E.9]** 108 months = 0.46055
-|      **[E.10]** 120 months = 0.62500
+| **[E]** Internally validated Time-Dependent AUROC metrics using bootstrap resampling of the train data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[E.1]** 12 months = 0.72181
+|      **[E.2]** 24 months = 0.71095
+|      **[E.3]** 36 months = 0.62796
+|      **[E.4]** 48 months = 0.65079
+|      **[E.5]** 60 months = 0.63001
+|      **[E.6]** 72 months = 0.65456
+|      **[E.7]** 84 months = 0.71094
+|      **[E.8]** 96 months = 0.57652
+|      **[E.9]** 108 months = 0.76628
+|      **[E.10]** 120 months = 0.79072
 |
-| **[F]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+| **[F]** Externally validated Time-Dependent AUROC metrics using the test data showed good performance overall except for the last few time periods and are summarized as follows:
+|      **[F.1]** 12 months = 0.73644
+|      **[F.2]** 24 months = 0.70272
+|      **[F.3]** 36 months = 0.58654
+|      **[F.4]** 48 months = 0.61131
+|      **[F.5]** 60 months = 0.59972
+|      **[F.6]** 72 months = 0.63533
+|      **[F.7]** 84 months = 0.68976
+|      **[F.8]** 96 months = 0.86677
+|      **[F.9]** 108 months = 0.46055
+|      **[F.10]** 120 months = 0.62500
 |
-| **[G]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
+| **[G]** Model predictions at time = 60 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05. 
+|
+| **[H]** Model predictions at time = 120 months were reasonably calibrated for both the train and test data. Kaplan-Meier survival curves for the three risk groups from the calibration data were differentially profiled with p-value < 0.05.
 |
 |
 
@@ -2901,11 +2911,11 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
 |
 | **[A]** All models had considerably high time-dependent AUROC overall although most reported lower values (and wider confidence intervals) at the 108th and 120th time periods potentially due to lesser case numbers for these survival times.
 |
-| **[B]** The method which demonstrated consistent time-dependent AUROC across all the time periods was **FLASSO: Fused Least Absolute Shrinkage and Selection Operator** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) with the most optimal number of retained predictors at 3.
+| **[B]** The method which demonstrated consistent time-dependent AUROC across all the time periods was **FLASSO: Fused Least Absolute Shrinkage and Selection Operator** (<mark style="background-color: #CCECFF">**survival**</mark>,<mark style="background-color: #CCECFF">**hdnom**</mark> and <mark style="background-color: #CCECFF">**penalized**</mark> packages) with the most optimal number of retained predictors at 3.
 |
-| **[C]** Lesser number of retained predictors were noted for the **LASSO: Least Absolute Shrinkage and Selection Operator** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) and **ENET: Elastic Net** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) methods with 5 and 7, respectively.
+| **[C]** Lesser number of retained predictors were noted for the **LASSO: Least Absolute Shrinkage and Selection Operator** and **ENET: Elastic Net** (<mark style="background-color: #CCECFF">**survival**</mark>, <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**glmnet**</mark> packages) methods with 5 and 7, respectively.
 |
-| **[C]** Time-dependent AUROC for the **MCP: Minimax Concave Penalty** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) and **SCAD: Smoothly Clipped Absolute Deviation** (<mark style="background-color: #CCECFF">**hdnom**</mark> package) methods were comparable all across the time periods with retained number of predictors equal to 13 and 15, respectively.
+| **[C]** Time-dependent AUROC for the **MCP: Minimax Concave Penalty** and **SCAD: Smoothly Clipped Absolute Deviation** (<mark style="background-color: #CCECFF">**survival**</mark>, <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**ncvreg**</mark> packages) methods were comparable all across the time periods with retained number of predictors equal to 13 and 15, respectively.
 |
 |
 
