@@ -1454,7 +1454,7 @@ plot(LASSO_Train_CoxPH_Model_ExternalValidation,
 # Conducting an internal calibration
 # of the LASSO model
 # using a 50-cycle bootstrap
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
                                                        LASSO_Train_Time,
@@ -1488,7 +1488,7 @@ LASSO_Train_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_InternalCalibr
 # Conducting an internal calibration
 # of the LASSO model
 # using a 50-cycle bootstrap
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 LASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(LASSO_Train_Predictors,
                                                        LASSO_Train_Time,
@@ -1522,7 +1522,7 @@ LASSO_Train_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_InternalCalibr
 # Conducting an external calibration
 # of the LASSO model
 # using the test data
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 LASSO_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(LASSO_Train_CoxPH_Fit,
                                                        LASSO_Train_Predictors,
@@ -1554,7 +1554,7 @@ LASSO_Test_CoxPH_Model_KMPlot <- kmplot( LASSO_Train_CoxPH_Model_ExternalCalibra
 # Conducting an external calibration
 # of the LASSO model
 # using the test data
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 LASSO_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(LASSO_Train_CoxPH_Fit,
                                                        LASSO_Train_Predictors,
@@ -1781,7 +1781,7 @@ plot(ENET_Train_CoxPH_Model_ExternalValidation,
 # Conducting an internal calibration
 # of the ENET model
 # using a 50-cycle bootstrap
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 ENET_Train_CoxPH_Model_InternalCalibration <- calibrate(ENET_Train_Predictors,
                                                        ENET_Train_Time,
@@ -1815,7 +1815,7 @@ ENET_Train_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_InternalCalibrat
 # Conducting an internal calibration
 # of the ENET model
 # using a 50-cycle bootstrap
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 ENET_Train_CoxPH_Model_InternalCalibration <- calibrate(ENET_Train_Predictors,
                                                        ENET_Train_Time,
@@ -1849,7 +1849,7 @@ ENET_Train_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_InternalCalibrat
 # Conducting an external calibration
 # of the ENET model
 # using the test data
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 ENET_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(ENET_Train_CoxPH_Fit,
                                                        ENET_Train_Predictors,
@@ -1881,7 +1881,7 @@ ENET_Test_CoxPH_Model_KMPlot <- kmplot( ENET_Train_CoxPH_Model_ExternalCalibrati
 # Conducting an external calibration
 # of the ENET model
 # using the test data
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 ENET_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(ENET_Train_CoxPH_Fit,
                                                        ENET_Train_Predictors,
@@ -2114,7 +2114,7 @@ plot(MCP_Train_CoxPH_Model_ExternalValidation,
 # Conducting an internal calibration
 # of the MCP model
 # using a 50-cycle bootstrap
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 MCP_Train_CoxPH_Model_InternalCalibration <- calibrate(MCP_Train_Predictors,
                                                        MCP_Train_Time,
@@ -2149,7 +2149,7 @@ MCP_Train_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_InternalCalibratio
 # Conducting an internal calibration
 # of the MCP model
 # using a 50-cycle bootstrap
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 MCP_Train_CoxPH_Model_InternalCalibration <- calibrate(MCP_Train_Predictors,
                                                        MCP_Train_Time,
@@ -2184,7 +2184,7 @@ MCP_Train_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_InternalCalibratio
 # Conducting an external calibration
 # of the MCP model
 # using the test data
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 MCP_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(MCP_Train_CoxPH_Fit,
                                                        MCP_Train_Predictors,
@@ -2216,7 +2216,7 @@ MCP_Test_CoxPH_Model_KMPlot <- kmplot( MCP_Train_CoxPH_Model_ExternalCalibration
 # Conducting an external calibration
 # of the MCP model
 # using the test data
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 MCP_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(MCP_Train_CoxPH_Fit,
                                                        MCP_Train_Predictors,
@@ -2451,7 +2451,7 @@ plot(SCAD_Train_CoxPH_Model_ExternalValidation,
 # Conducting an internal calibration
 # of the SCAD model
 # using a 50-cycle bootstrap
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 SCAD_Train_CoxPH_Model_InternalCalibration <- calibrate(SCAD_Train_Predictors,
                                                        SCAD_Train_Time,
@@ -2486,7 +2486,7 @@ SCAD_Train_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_InternalCalibrat
 # Conducting an internal calibration
 # of the SCAD model
 # using a 50-cycle bootstrap
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 SCAD_Train_CoxPH_Model_InternalCalibration <- calibrate(SCAD_Train_Predictors,
                                                        SCAD_Train_Time,
@@ -2521,7 +2521,7 @@ SCAD_Train_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_InternalCalibrat
 # Conducting an external calibration
 # of the SCAD model
 # using the test data
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 SCAD_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(SCAD_Train_CoxPH_Fit,
                                                        SCAD_Train_Predictors,
@@ -2553,7 +2553,7 @@ SCAD_Test_CoxPH_Model_KMPlot <- kmplot( SCAD_Train_CoxPH_Model_ExternalCalibrati
 # Conducting an external calibration
 # of the SCAD model
 # using the test data
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 SCAD_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(SCAD_Train_CoxPH_Fit,
                                                        SCAD_Train_Predictors,
@@ -2773,7 +2773,7 @@ plot(FLASSO_Train_CoxPH_Model_ExternalValidation,
 # Conducting an internal calibration
 # of the FLASSO model
 # using a 50-cycle bootstrap
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 FLASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(FLASSO_Train_Predictors,
                                                        FLASSO_Train_Time,
@@ -2807,7 +2807,7 @@ FLASSO_Train_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_InternalCali
 # Conducting an internal calibration
 # of the FLASSO model
 # using a 50-cycle bootstrap
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 FLASSO_Train_CoxPH_Model_InternalCalibration <- calibrate(FLASSO_Train_Predictors,
                                                        FLASSO_Train_Time,
@@ -2841,7 +2841,7 @@ FLASSO_Train_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_InternalCali
 # Conducting an external calibration
 # of the FLASSO model
 # using the test data
-# for Year 5
+# for Year 5 (Time = 60)
 ##################################
 FLASSO_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(FLASSO_Train_CoxPH_Fit,
                                                        FLASSO_Train_Predictors,
@@ -2873,7 +2873,7 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
 # Conducting an external calibration
 # of the FLASSO model
 # using the test data
-# for Year 10
+# for Year 10 (Time = 120)
 ##################################
 FLASSO_Train_CoxPH_Model_ExternalCalibration <- calibrate_external(FLASSO_Train_CoxPH_Fit,
                                                        FLASSO_Train_Predictors,
