@@ -2915,7 +2915,7 @@ FLASSO_Test_CoxPH_Model_KMPlot <- kmplot( FLASSO_Train_CoxPH_Model_ExternalCalib
 |
 | **[C]** Lesser number of retained predictors were noted for the **LASSO: Least Absolute Shrinkage and Selection Operator** and **ENET: Elastic Net** (<mark style="background-color: #CCECFF">**survival**</mark>, <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**glmnet**</mark> packages) methods with 5 and 7, respectively.
 |
-| **[C]** Time-dependent AUROC for the **MCP: Minimax Concave Penalty** and **SCAD: Smoothly Clipped Absolute Deviation** (<mark style="background-color: #CCECFF">**survival**</mark>, <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**ncvreg**</mark> packages) methods were comparable all across the time periods with retained number of predictors equal to 13 and 15, respectively.
+| **[D]** Time-dependent AUROC for the **MCP: Minimax Concave Penalty** and **SCAD: Smoothly Clipped Absolute Deviation** (<mark style="background-color: #CCECFF">**survival**</mark>, <mark style="background-color: #CCECFF">**hdnom**</mark>, <mark style="background-color: #CCECFF">**penalized**</mark> and <mark style="background-color: #CCECFF">**ncvreg**</mark> packages) methods were comparable all across the time periods with retained number of predictors equal to 13 and 15, respectively.
 |
 |
 
