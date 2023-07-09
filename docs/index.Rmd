@@ -1,5 +1,5 @@
 ---
-title: "R : Exploring Penalized Models for Handling High-Dimensional Survival Data"
+title: "Supervised Learning : Exploring Penalized Models for Handling High-Dimensional Survival Data"
 author: "John Pauline Pineda"
 date: "June 28, 2023"
 output: 
