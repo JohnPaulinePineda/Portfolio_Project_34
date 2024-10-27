@@ -1,6 +1,6 @@
 ---
 title: "Supervised Learning : Exploring Penalized Models for Handling High-Dimensional Survival Data"
-author: "John Pauline Pineda"
+author: "<b><a href='https://github.com/JohnPaulinePineda'>John Pauline Pineda</a></b>"
 date: "June 28, 2023"
 output: 
   html_document:
@@ -1061,7 +1061,7 @@ EDA.Bar.Source.FactorVar.Prop.Group <- rbind(EDA.PropTable.Function(names(EDA.Ba
                                       stack=TRUE,
                                       ylab = "Proportion",
                                       xlab = "Structure",
-                                      auto.key = list(adj = 1),
+                                      auto.key = list(adj=1, space="top", columns=2),
                                       layout=(c(5,3))))
 
 ##################################
@@ -2938,7 +2938,7 @@ TDAUROC_Summary$Time  <- factor(TDAUROC_Summary$Time,
                          main = "Penalized Model Performance Comparison",
                          ylab = "Model",
                          xlab = "Time-Dependent AUROC",
-                         auto.key = list(adj = 1),
+                         auto.key = list(adj=1, space="top", columns=2),
                          type=c("p", "h"),   
                          origin = 0,
                          alpha = 0.45,
@@ -2952,7 +2952,7 @@ TDAUROC_Summary$Time  <- factor(TDAUROC_Summary$Time,
 |
 # **2. Summary** <a name="summary"></a>
 |
-| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_34/docs/Project34_Summary.png)
+| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_34/images/Project34_Summary.png)
 |
 # **3. References**
 |
